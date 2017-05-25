@@ -1,0 +1,28 @@
+FROM openjdk:8-jre-alpine
+
+ENV APP_DIR=/opt/apps/spring-rest-base
+ENV CONFIG_DIR=/opt/apps/spring-rest-base/config
+ENV LOGS_DIR=/opt/apps/spring-rest-base/logs
+
+
+RUN mkdir -p $APP_DIR
+RUN mkdir -p $CONFIG_DIR
+RUN mkdir -p $LOGS_DIR
+
+COPY target/spring-rest-base*jar $APP_DIR
+
+COPY config/* $CONFIG_DIR
+COPY spring-rest-base.start.sh $APP_DIR/spring-rest-base.start.sh
+
+RUN chmod +x $APP_DIR/spring-rest-base.start.sh
+
+RUN sed -i 's/localhost:5432/db:5432/' $CONFIG_DIR/application.properties 
+
+
+CMD sleep 30 && ./spring-rest-base.start.sh
+
+WORKDIR $APP_DIR
+
+
+
+

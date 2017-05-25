@@ -1,0 +1,32 @@
+version: '2'
+
+services:
+
+    db:
+       build:
+               context: . 
+               dockerfile: Dockerfile-postgres 
+               '5432:5432'
+            
+    liquibase:
+        build:
+               context: . 
+               dockerfile: Dockerfile-liquibase 
+
+        depends_on:
+              - db
+        links:
+              - db
+
+    app:
+        build: 
+               context: .
+               dockerfile: Dockerfile-app 
+
+        ports: 
+            - '8080:8080'
+        depends_on:
+              - db
+              - liquibase
+        links:
+              - db
