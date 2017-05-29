@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.util.StopWatch;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -24,7 +25,7 @@ public class MDCInterceptor  extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 
-		String tracerBullet = request.getHeader("x-"+Constants.TRACER_BULLET);
+		String tracerBullet = request.getHeader("x-" + Constants.TRACER_BULLET);
 
 		if (!StringUtils.isEmpty(tracerBullet)) {
 			MDC.put(Constants.TRACER_BULLET, tracerBullet);
@@ -32,10 +33,18 @@ public class MDCInterceptor  extends OncePerRequestFilter {
 		} else {
 			tracerBullet = UUID.randomUUID().toString();
 			MDC.put(Constants.TRACER_BULLET, tracerBullet);
-			logger.debug("Header {} is empty. Generated local {} value is {}", Constants.TRACER_BULLET, Constants.TRACER_BULLET, tracerBullet);
+			logger.debug("Header {} is empty. Generated local {} value is {}", Constants.TRACER_BULLET,
+					Constants.TRACER_BULLET, tracerBullet);
 		}
 
+		StopWatch watch = new StopWatch();
+		watch.start();
+
 		filterChain.doFilter(request, response);
+
+		watch.stop();
+		logger.info("Request processed in {} ms", watch.getTotalTimeMillis());
+
 		MDC.remove(Constants.TRACER_BULLET);
 
 	}

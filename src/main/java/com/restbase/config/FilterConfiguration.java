@@ -16,6 +16,6 @@ public class FilterConfiguration {
 		registrationBean.setFilter(mdcFilter);
 		registrationBean.setOrder(1);
 		return registrationBean;
-}
+	}
 
 }

@@ -30,10 +30,12 @@ public class Test {
 	public Test() {
 	}
 
-	public Test(Long id) {
+	public Test(UUID uuid) {
 		super();
-		this.id = id;
+		this.uuid = uuid;
 	}
+	
+	
 
 	public Long getId() {
 		return id;
