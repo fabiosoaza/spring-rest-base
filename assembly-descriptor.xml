@@ -1,0 +1,38 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+
+	<id>app</id>
+	<formats>
+		<format>tar.gz</format>
+	</formats>
+	<includeBaseDirectory>true</includeBaseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>${project.build.directory}</directory>
+			<outputDirectory>bin</outputDirectory>
+			<directoryMode>755</directoryMode>
+			<fileMode>644</fileMode>
+			<includes>
+				<include>**/*.jar</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>src/main/resources</directory>
+			<outputDirectory>logs</outputDirectory>
+			<directoryMode>755</directoryMode>
+			<excludes>
+                <!-- exclui todos os arquivos para criar apenas a pasta vazia -->
+				<exclude>**/*</exclude>
+			</excludes>
+		</fileSet>
+	</fileSets>
+	<files>
+		<file>
+			<source>config/application.properties</source>
+			<fileMode>644</fileMode>
+			<lineEnding>unix</lineEnding>
+			<outputDirectory>config</outputDirectory>
+			<destName>application.properties</destName>
+		</file>
+	</files>
+
+</assembly>
