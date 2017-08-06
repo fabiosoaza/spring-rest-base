@@ -4,10 +4,7 @@ docker-build: build-app
 	docker build . -f Dockerfile-app  -t fabiosoaza/spring-rest-base-app:latest
 
 build-app:
-		mvn clean install -DskipTests
-
-run-liquibase:
-		docker-compose run liquibase -d
+		mvn clean install
 
 docker-up:
 		docker-compose -f docker-compose.yml kill
