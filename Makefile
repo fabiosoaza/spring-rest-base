@@ -6,8 +6,10 @@ docker-build: build-app
 build-app:
 		mvn clean install
 
-docker-up:
+docker-stop:
 		docker-compose -f docker-compose.yml kill
+
+docker-up:	docker-stop	
 		docker-compose -f docker-compose.yml up -d		
 
 docker: docker-build docker-up
