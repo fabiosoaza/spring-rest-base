@@ -18,8 +18,7 @@ COPY database-changelogs/*properties $CONFIGS_DIR
 RUN sed -i 's/localhost:5432/db:5432/' $LIQUIBASE_PROPERTIES
 
 
-CMD sleep 10 && ./liquibase --defaultsFile=$LIQUIBASE_DEFAULTS_FILE update
-
+CMD sleep 20 && ./liquibase --defaultsFile=$LIQUIBASE_DEFAULTS_FILE update
 
 
 
