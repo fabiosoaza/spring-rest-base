@@ -16,8 +16,6 @@ COPY spring-rest-base.start.sh $APP_DIR/run.sh
 
 RUN chmod +x $APP_DIR/run.sh
 
-RUN sed -i 's/localhost:5432/db:5432/' $CONFIG_DIR/application.properties 
-
 CMD sleep 20 && ./run.sh
 
 WORKDIR $APP_DIR

@@ -19,3 +19,10 @@ services:
                   - liquibase
             ports: 
                   - '8080:8080'
+            environment: 
+                  - DB_HOST=db
+                  - DB_NAME=test
+                  - DB_PORT=5432
+                  - DB_USER=test
+                  - DB_PASS=test
+
