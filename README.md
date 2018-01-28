@@ -1,6 +1,5 @@
 # spring-rest-base
 
-[![Build Status](https://travis-ci.org/fabiosoaza/spring-rest-base.svg?branch=master)](https://travis-ci.org/fabiosoaza/spring-rest-base) [![codecov](https://codecov.io/gh/fabiosoaza/spring-rest-base/branch/master/graph/badge.svg)](https://codecov.io/gh/fabiosoaza/spring-rest-base) [![Maintainability](https://api.codeclimate.com/v1/badges/43599ab6708a59ca8036/maintainability)](https://codeclimate.com/github/fabiosoaza/spring-rest-base/maintainability)
+[![Build Status](https://travis-ci.org/fabiosoaza/spring-rest-base.svg?branch=master)](https://travis-ci.org/fabiosoaza/spring-rest-base) [![codecov](https://codecov.io/gh/fabiosoaza/spring-rest-base/branch/master/graph/badge.svg)](https://codecov.io/gh/fabiosoaza/spring-rest-base) [![Maintainability](https://api.codeclimate.com/v1/badges/43599ab6708a59ca8036/maintainability)](https://codeclimate.com/github/fabiosoaza/spring-rest-base/maintainability) [![Coverage Status](https://coveralls.io/repos/github/fabiosoaza/spring-rest-base/badge.svg?branch=master)](https://coveralls.io/github/fabiosoaza/spring-rest-base?branch=master)
 
-
-Simple test using spring-boot, spring-mvc, spring-data and ehcache
+Minimalist crud using spring-boot with spring-mvc and spring-data

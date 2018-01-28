@@ -14,7 +14,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>1.5.4.BUILD-SNAPSHOT</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
 	<properties>
@@ -22,10 +22,12 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 		<bonecp.version>0.8.0.RELEASE</bonecp.version>
-				
+		<coveralls-maven-plugin.version>4.3.0</coveralls-maven-plugin.version>
+		
+
 	</properties>
 
-	<dependencies>		
+	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -41,7 +43,7 @@
 
 		<dependency>
 			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>			
+			<artifactId>postgresql</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -49,16 +51,16 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-					<groupId>net.sf.ehcache</groupId>
-					<artifactId>ehcache</artifactId>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache</artifactId>
 		</dependency>
 		<dependency>
-		    <groupId>com.jolbox</groupId>
-		    <artifactId>bonecp</artifactId>
-		    <version>${bonecp.version}</version>
+			<groupId>com.jolbox</groupId>
+			<artifactId>bonecp</artifactId>
+			<version>${bonecp.version}</version>
 		</dependency>
-		
-		
+
+
 	</dependencies>
 
 	<build>
@@ -67,10 +69,10 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>findbugs-maven-plugin</artifactId>				
+				<artifactId>findbugs-maven-plugin</artifactId>
 				<configuration>
 					<effort>Max</effort>
 					<threshold>High</threshold>
@@ -84,11 +86,11 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-			
+
 				<executions>
 					<execution>
 						<id>prepare-agent</id>
@@ -106,10 +108,16 @@
 				</executions>
 			</plugin>
 			
-			
+			<plugin>
+				<groupId>org.eluder.coveralls</groupId>
+				<artifactId>coveralls-maven-plugin</artifactId>
+				<version>${coveralls-maven-plugin.version}</version>				
+			</plugin>
+
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>						
+				<artifactId>maven-assembly-plugin</artifactId>
 				<executions>
 					<execution>
 						<goals>
@@ -128,6 +136,7 @@
 		</plugins>
 	</build>
 
+	
 	<repositories>
 		<repository>
 			<id>spring-snapshots</id>
