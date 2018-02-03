@@ -67,6 +67,14 @@ public class TestService {
 		ConstraintValidators.checkNull(toDelete, message);
 		testRepository.delete(id);
 	}
+	
+	public void deleteByUUID(UUID uuid) {
+		logger.info("Deleting Test");		
+		Test toDelete = findByUuid(uuid);
+		String message = String.format("Id %s could not be found", uuid);
+		ConstraintValidators.checkNull(toDelete, message);
+		testRepository.delete(toDelete.getId());
+	}
 
 
 }

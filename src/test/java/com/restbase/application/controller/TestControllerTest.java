@@ -1,15 +1,21 @@
 package com.restbase.application.controller;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.junit.Test;
@@ -24,6 +30,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.google.gson.Gson;
 import com.restbase.model.service.TestService;
 
 
@@ -115,6 +122,111 @@ public class TestControllerTest {
 				.andExpect(status().isNotFound())
 				.andExpect(content().string(""));
 
+	}
+	
+	@Test
+	public void methodPostShouldPersist() throws Exception {		
+		String json = jsonString(new HashMap<>());
+		mockMvc.perform(post("/tests/")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json)
+				)
+				.andExpect(status().isCreated())
+				.andExpect(content().string(containsString("uuid"))
+						
+				);
+
+	}
+	
+	@Test
+	public void methodUpdateShouldThrowAnExceptionIfIdIsInvalid() throws Exception {	
+				
+		String json = jsonString(new HashMap<>());
+		mockMvc.perform(put("/tests/1")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json)
+				)
+				.andExpect(status().isNotFound()
+				);
+	}
+	
+	@Test
+	public void methodUpdateShouldThrowAnExceptionIfIdIsNotFound() throws Exception {		
+		Mockito.doThrow(new IllegalArgumentException("Id not found")).when(testService).updateByUUID(Mockito.any(UUID.class), Mockito.any(com.restbase.model.domain.Test.class));
+		
+		String json = jsonString(new HashMap<>());
+		mockMvc.perform(put("/tests/"+UUID.randomUUID().toString())				
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json)
+				)
+				.andExpect(status().isNotFound()
+				);
+	}
+	
+	@Test
+	public void methodUpdateShouldPersist() throws Exception {		
+		String json = jsonString(new HashMap<>());
+		mockMvc.perform(put("/tests/"+UUID.randomUUID().toString())		
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json)
+				)
+				.andExpect(status().isOk()
+				);
+
+	}
+	
+	@Test
+	public void methodDeleteShouldThrowAnExceptionIfIdIsEmpty() throws Exception {	
+				
+		String json = jsonString(new HashMap<>());
+		mockMvc.perform(delete("/tests/")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json)
+				)
+				.andExpect(status().isMethodNotAllowed()
+				);
+	}
+	
+	@Test
+	public void methodDeleteShouldThrowAnExceptionIfIdIsInvalid() throws Exception {	
+				
+		String json = jsonString(new HashMap<>());
+		mockMvc.perform(delete("/tests/1")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json)
+				)
+				.andExpect(status().isNotFound()
+				);
+	}
+	
+	@Test
+	public void methodDeleteShouldThrowAnExceptionIfIdIsNotFound() throws Exception {		
+		Mockito.doThrow(new IllegalArgumentException("Id not found")).when(testService).deleteByUUID(Mockito.any(UUID.class));
+		
+		String json = jsonString(new HashMap<>());
+		mockMvc.perform(delete("/tests/"+UUID.randomUUID().toString())				
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json)
+				)
+				.andExpect(status().isNotFound()
+				);
+	}
+	
+	@Test
+	public void methodDeleteShouldPersist() throws Exception {		
+		String json = jsonString(new HashMap<>());
+		mockMvc.perform(delete("/tests/"+UUID.randomUUID().toString())		
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json)
+				)
+				.andExpect(status().isOk()
+				);
+
+	}
+
+	private String jsonString(Map<String, Object> map) {				
+	    String json = new Gson().toJson(map);
+		return json;
 	}
 
 }

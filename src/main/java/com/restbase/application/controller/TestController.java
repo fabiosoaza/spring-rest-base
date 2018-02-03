@@ -1,6 +1,8 @@
 package com.restbase.application.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
 import com.restbase.model.domain.Test;
 import com.restbase.model.service.TestService;
 
@@ -42,10 +45,16 @@ public class TestController {
 	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
 	public ResponseEntity<Test> view(@PathVariable("id") String id){
 		logger.info("Request Viewing, id {}.", id);
-		UUID uuid = getUuid(id);
-		Test test = uuid!= null ? testService.findByUuid(uuid) : null;
-		HttpStatus status = test !=null ? HttpStatus.OK: HttpStatus.NOT_FOUND;		
-		return ResponseEntity.status(status).body(test);
+		Test test = null;
+		try{
+			UUID uuid = getUuid(id);
+			test = uuid!= null ? testService.findByUuid(uuid) : null;
+			HttpStatus status = test !=null ? HttpStatus.OK: HttpStatus.NOT_FOUND;
+			return ResponseEntity.status(status).body(test);
+		}
+		catch(IllegalArgumentException ias){
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(test);
+		}
 	}
 
 	private UUID getUuid(String id) {
@@ -55,35 +64,46 @@ public class TestController {
 		}
 		catch(Exception ex){
 			logger.error("Fail parsing the UUID string", ex);
+			throw new IllegalArgumentException("Invalid id");
 		}
 		return uuid;
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<UUID> save(@RequestBody Test test){
+	public ResponseEntity<String> save(@RequestBody Test test){
 		logger.info("Request Saving");
 		testService.save(test);
-		return new ResponseEntity<>(test.getUuid(), HttpStatus.CREATED);
+		Map<String, Object> map = new HashMap<>();
+		map.put("uuid", test.getUuid().toString());		
+	    String json = new Gson().toJson(map);
+		return new ResponseEntity<>(json, HttpStatus.CREATED);
 	}
 	
 	@RequestMapping(method = RequestMethod.PUT, value = "/{id}")
-	public Test update(@PathVariable("id") String id, @RequestBody Test test){
+	public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody Test test){
 		logger.info("Request updating, id {}.", id);
-		testService.updateByUUID(UUID.fromString(id), test);
-		return test;
+		try{
+			testService.updateByUUID(getUuid(id), test);
+		}
+		catch(IllegalArgumentException ex){
+			logger.error("Error updating, id "+id+", request "+test+".", ex);
+			return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+		}
+		
+		return new ResponseEntity<>(id, HttpStatus.OK);
 	}
 	
 	@RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
-	public ResponseEntity<UUID> delete(@PathVariable("id") String id){
+	public ResponseEntity<String> delete(@PathVariable("id") String id){
 		logger.info("Request removing, id {}.", id);
-		UUID uuid = UUID.fromString(id);
-		Test test = testService.findByUuid(uuid);
-		if(test==null){
-			logger.info("id {} not found.", id);
-			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+		try{
+			testService.deleteByUUID(getUuid(id));			
 		}
-		testService.deleteByPk(test.getId());
-		return new ResponseEntity<>(uuid, HttpStatus.OK);
+		catch(IllegalArgumentException ex){
+			logger.error("Error deleting id "+id+".", ex);
+			return new ResponseEntity<>("", HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>("", HttpStatus.OK);
 	}
 	
 

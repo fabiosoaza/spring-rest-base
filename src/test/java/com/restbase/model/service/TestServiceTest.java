@@ -162,13 +162,11 @@ public class TestServiceTest {
 	@Test(expected=IllegalArgumentException.class)
 	public void deleteByPkShouldThrowAnExceptionIfIdIsNotFound(){		
 		try{
-			com.restbase.model.domain.Test test = new com.restbase.model.domain.Test();
-			test.setId(DEFAULT_ID);
 			Mockito.when(testRepository.findOne(Mockito.eq(DEFAULT_ID))).thenReturn(null);
 			testService.deleteByPk(DEFAULT_ID);
 		}
 		finally{
-			Mockito.verify(testRepository, Mockito.never()).save(Mockito.any(com.restbase.model.domain.Test.class));			
+			Mockito.verify(testRepository, Mockito.never()).delete(Mockito.eq(DEFAULT_ID));			
 		}			
 	}
 	
@@ -179,7 +177,39 @@ public class TestServiceTest {
 		test.setId(DEFAULT_ID);
 		Mockito.when(testRepository.findOne(Mockito.eq(DEFAULT_ID))).thenReturn(test);
 		testService.deleteByPk(DEFAULT_ID);
-		Mockito.verify(testRepository).delete(DEFAULT_ID);
+		Mockito.verify(testRepository).delete(Mockito.eq(DEFAULT_ID));
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void deleteByUUIDShouldThrowAnExceptionIfIdIsNull(){
+		try{
+			testService.deleteByUUID(null);
+		}
+		finally{
+			Mockito.verify(testRepository, Mockito.never()).delete(Mockito.any(Long.class));			
+		}		
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void deleteByUUIDShouldThrowAnExceptionIfIdIsNotFound(){		
+		try{
+			UUID uuid = UUID.randomUUID();
+			Mockito.when(testRepository.findOneByUuid(Mockito.eq(uuid))).thenReturn(null);
+			testService.deleteByUUID(uuid);
+		}
+		finally{
+			Mockito.verify(testRepository, Mockito.never()).delete(Mockito.any(Long.class));			
+		}			
+	}
+	
+	
+	@Test
+	public void deleteUUIDPkShouldDeleteIfIdIsFound(){		
+		UUID uuid = UUID.randomUUID();
+		com.restbase.model.domain.Test test = new com.restbase.model.domain.Test(uuid);
+		Mockito.when(testRepository.findOneByUuid(Mockito.eq(uuid))).thenReturn(test);
+		testService.deleteByUUID(uuid);
+		Mockito.verify(testRepository).delete(Mockito.any(Long.class));
 	}
 	
 	
