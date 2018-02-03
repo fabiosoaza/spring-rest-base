@@ -105,6 +105,8 @@
         				<exclude>com/restbase/application/config/**/*</exclude>
         				<exclude>com/restbase/application/constant/**/*</exclude>
         				<exclude>**/*SpringRestBaseApplication.*</exclude>
+        				<exclude>**/*CacheNames.*</exclude>
+        				CacheNames
         		 </excludes>
 				</configuration>
 				<executions>

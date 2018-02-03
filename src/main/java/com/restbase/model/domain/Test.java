@@ -55,7 +55,7 @@ public class Test {
 
 	@Override
 	public boolean equals(Object obj) {		
-		if (obj == null || (getClass() != obj.getClass()) ) {
+		if (obj == null || !(obj instanceof Test) ) {
 			return false;
 		}
 		Test other = (Test) obj;
