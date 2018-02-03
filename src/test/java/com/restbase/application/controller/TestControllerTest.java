@@ -1,4 +1,4 @@
-package com.restbase.controller;
+package com.restbase.application.controller;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
@@ -24,6 +24,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.restbase.application.controller.TestController;
 import com.restbase.model.service.TestService;
 
 

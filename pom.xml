@@ -59,6 +59,12 @@
 			<artifactId>bonecp</artifactId>
 			<version>${bonecp.version}</version>
 		</dependency>
+		<dependency>
+		  <groupId>org.assertj</groupId>
+		  <artifactId>assertj-core</artifactId>
+		  
+		  <scope>test</scope>
+		</dependency>
 
 
 	</dependencies>
@@ -90,7 +96,12 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-
+				<configuration>
+				 <excludes>
+        				<exclude>com/restbase/application/config/**/*</exclude>
+        				<exclude>com/restbase/application/constant/**/*</exclude>
+        		 </excludes>
+				</configuration>
 				<executions>
 					<execution>
 						<id>prepare-agent</id>

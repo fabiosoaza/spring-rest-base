@@ -1,4 +1,4 @@
-package com.restbase.config;
+package com.restbase.application.config;
 
 import javax.sql.DataSource;
 

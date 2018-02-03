@@ -1,4 +1,4 @@
-package com.restbase.controller;
+package com.restbase.application.controller;
 
 import java.math.BigDecimal;
 import java.util.List;

@@ -1,10 +1,10 @@
-package com.restbase.config;
+package com.restbase.application.config;
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.restbase.controller.interceptor.MDCInterceptor;
+import com.restbase.application.controller.interceptor.MDCInterceptor;
 
 @Configuration
 public class FilterConfiguration {

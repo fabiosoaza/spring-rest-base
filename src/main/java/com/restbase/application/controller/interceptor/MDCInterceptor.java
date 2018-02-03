@@ -1,4 +1,4 @@
-package com.restbase.controller.interceptor;
+package com.restbase.application.controller.interceptor;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -15,7 +15,7 @@ import org.springframework.util.StopWatch;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.restbase.model.constant.Constants;
+import com.restbase.application.constant.Constants;
 
 public class MDCInterceptor  extends OncePerRequestFilter {
 	
@@ -25,16 +25,15 @@ public class MDCInterceptor  extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 
-		String tracerBullet = request.getHeader("x-" + Constants.TRACER_BULLET);
+		String tracerBullet = request.getHeader(Constants.TRACER_BULLET_HEADER);
 
 		if (!StringUtils.isEmpty(tracerBullet)) {
-			MDC.put(Constants.TRACER_BULLET, tracerBullet);
-			logger.debug("Header {} value put into MDC", Constants.TRACER_BULLET);
+			setTracerBullet(tracerBullet);
+			logger.debug("Header {} value put into MDC is {}", Constants.TRACER_BULLET, tracerBullet);
 		} else {
 			tracerBullet = UUID.randomUUID().toString();
-			MDC.put(Constants.TRACER_BULLET, tracerBullet);
-			logger.debug("Header {} is empty. Generated local {} value is {}", Constants.TRACER_BULLET,
-					Constants.TRACER_BULLET, tracerBullet);
+			setTracerBullet(tracerBullet);
+			logger.debug("Header {} is empty. Generated local {} value is {}", Constants.TRACER_BULLET, Constants.TRACER_BULLET, tracerBullet);
 		}
 
 		StopWatch watch = new StopWatch();
@@ -47,6 +46,10 @@ public class MDCInterceptor  extends OncePerRequestFilter {
 
 		MDC.remove(Constants.TRACER_BULLET);
 
+	}
+
+	protected void setTracerBullet(String tracerBullet) {
+		MDC.put(Constants.TRACER_BULLET, tracerBullet);
 	}
 
 }
