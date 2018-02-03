@@ -47,8 +47,7 @@ public class TestController {
 		logger.info("Request Viewing, id {}.", id);
 		Test test = null;
 		try{
-			UUID uuid = getUuid(id);
-			test = uuid!= null ? testService.findByUuid(uuid) : null;
+			test = testService.findByUuid(getUuid(id));
 			HttpStatus status = test !=null ? HttpStatus.OK: HttpStatus.NOT_FOUND;
 			return ResponseEntity.status(status).body(test);
 		}

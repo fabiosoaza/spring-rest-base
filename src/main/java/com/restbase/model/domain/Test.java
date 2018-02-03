@@ -1,5 +1,6 @@
 package com.restbase.model.domain;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -49,27 +50,16 @@ public class Test {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
-		return result;
+		return Objects.hash(uuid);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
+	public boolean equals(Object obj) {		
+		if (obj == null || (getClass() != obj.getClass()) ) {
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		}
 		Test other = (Test) obj;
-		if (uuid == null) {
-			if (other.uuid != null)
-				return false;
-		} else if (!uuid.equals(other.uuid))
-			return false;
-		return true;
+		return Objects.equals(uuid, other.getUuid());
 	}
 
 	@Override
