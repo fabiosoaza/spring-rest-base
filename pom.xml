@@ -21,9 +21,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<bonecp.version>0.8.0.RELEASE</bonecp.version>
-		<coveralls-maven-plugin.version>4.3.0</coveralls-maven-plugin.version>
-		
+		<bonecp.version>0.8.0.RELEASE</bonecp.version>		
 
 	</properties>
 
@@ -119,13 +117,7 @@
 				</executions>
 			</plugin>
 			
-			<plugin>
-				<groupId>org.eluder.coveralls</groupId>
-				<artifactId>coveralls-maven-plugin</artifactId>
-				<version>${coveralls-maven-plugin.version}</version>				
-			</plugin>
-
-
+	
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
