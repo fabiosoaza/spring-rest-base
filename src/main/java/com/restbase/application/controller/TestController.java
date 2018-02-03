@@ -1,6 +1,5 @@
 package com.restbase.application.controller;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,12 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,7 +26,7 @@ public class TestController {
 	private static final Logger logger = LoggerFactory.getLogger(TestController.class);
 	
 	@Autowired
-	private TestService service;	
+	private TestService testService;	
 	
 	public TestController() {
 	}
@@ -37,7 +34,7 @@ public class TestController {
 	@RequestMapping(method = RequestMethod.GET)	
 	public @ResponseBody ResponseEntity<?> list(){
 		logger.info("Request Listing");
-		List<Test> list = service.list();
+		List<Test> list = testService.list();
 		HttpStatus status = !CollectionUtils.isEmpty(list) ? HttpStatus.OK: HttpStatus.NOT_FOUND;
 		return ResponseEntity.status(status).body(list);
 	}
@@ -46,7 +43,7 @@ public class TestController {
 	public ResponseEntity<Test> view(@PathVariable("id") String id){
 		logger.info("Request Viewing, id {}.", id);
 		UUID uuid = getUuid(id);
-		Test test = uuid!= null ? service.findByUuid(uuid) : null;
+		Test test = uuid!= null ? testService.findByUuid(uuid) : null;
 		HttpStatus status = test !=null ? HttpStatus.OK: HttpStatus.NOT_FOUND;		
 		return ResponseEntity.status(status).body(test);
 	}
@@ -65,14 +62,14 @@ public class TestController {
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<UUID> save(@RequestBody Test test){
 		logger.info("Request Saving");
-		service.save(test);
+		testService.save(test);
 		return new ResponseEntity<>(test.getUuid(), HttpStatus.CREATED);
 	}
 	
 	@RequestMapping(method = RequestMethod.PUT, value = "/{id}")
 	public Test update(@PathVariable("id") String id, @RequestBody Test test){
 		logger.info("Request updating, id {}.", id);
-		service.update(UUID.fromString(id), test);
+		testService.updateByUUID(UUID.fromString(id), test);
 		return test;
 	}
 	
@@ -80,23 +77,15 @@ public class TestController {
 	public ResponseEntity<UUID> delete(@PathVariable("id") String id){
 		logger.info("Request removing, id {}.", id);
 		UUID uuid = UUID.fromString(id);
-		Test test = service.findByUuid(uuid);
+		Test test = testService.findByUuid(uuid);
 		if(test==null){
 			logger.info("id {} not found.", id);
 			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 		}
-		service.delete(test.getId());
+		testService.deleteByPk(test.getId());
 		return new ResponseEntity<>(uuid, HttpStatus.OK);
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value="/cached-prime-number")
-	public String testSlow(@RequestParam("number") String numberParam){	
-		StopWatch watch = new StopWatch();
-		watch.start();		
-		Long number = new BigDecimal(numberParam).longValue();
-		Long primeNumberAtPosition = service.getPrimeNumberAtPosition(number);
-		watch.stop();
-		return String.format("The prime number at position %s is %s. Total time %s ms.", number, primeNumberAtPosition, watch.getTotalTimeMillis());
-	}
+
 
 }

@@ -24,7 +24,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import com.restbase.application.controller.TestController;
 import com.restbase.model.service.TestService;
 
 
@@ -38,12 +37,12 @@ public class TestControllerTest {
 	private MockMvc mockMvc;
 	
 	@MockBean
-	private TestService service;
+	private TestService testService;	
 	
 	@Test
 	public void methodGetShouldReturnNotFoundIfNothingIsFound() throws Exception {
 		List<com.restbase.model.domain.Test> tests = new ArrayList<>();
-		Mockito.when(service.list()).thenReturn(tests);		
+		Mockito.when(testService.list()).thenReturn(tests);		
 		mockMvc.perform(
 					get("/tests/")					
 					.accept(MediaType.APPLICATION_JSON)
@@ -62,7 +61,7 @@ public class TestControllerTest {
 		com.restbase.model.domain.Test test2 = new com.restbase.model.domain.Test(id2);
 		List<com.restbase.model.domain.Test> tests = Arrays.asList(test1, test2);
 		
-		Mockito.when(service.list()).thenReturn(tests);		
+		Mockito.when(testService.list()).thenReturn(tests);		
 		mockMvc.perform(
 					get("/tests")					
 					.accept(MediaType.APPLICATION_JSON)					
@@ -81,9 +80,8 @@ public class TestControllerTest {
 	public void methodGetShouldResultFoundIfRequestedIdExists() throws Exception {
 		UUID id = UUID.randomUUID();
 		com.restbase.model.domain.Test test1 = new com.restbase.model.domain.Test(id);
-		
-		
-		Mockito.when(service.findByUuid(Mockito.eq(id))).thenReturn(test1);		
+
+		Mockito.when(testService.findByUuid(Mockito.eq(id))).thenReturn(test1);		
 		mockMvc.perform(
 					get("/tests/"+id)				
 					.accept(MediaType.APPLICATION_JSON)		
@@ -110,17 +108,13 @@ public class TestControllerTest {
 	@Test
 	public void methodGetShouldResultNotFoundIfRequestedIdDontExist() throws Exception {
 		UUID id = UUID.randomUUID();
-		
-		Mockito.when(service.findByUuid(Mockito.eq(id))).thenReturn(null);		
-		mockMvc.perform(
-					get("/tests/"+id)				
-					.accept(MediaType.APPLICATION_JSON)		
-				)
-                .andExpect(status().isNotFound())
-                .andExpect(content().string(""));
-			
-                	
-		
+
+		Mockito.when(testService.findByUuid(Mockito.eq(id))).thenReturn(null);
+		mockMvc.perform(get("/tests/" + id)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isNotFound())
+				.andExpect(content().string(""));
+
 	}
 
 }

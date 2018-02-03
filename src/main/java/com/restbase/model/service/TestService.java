@@ -7,11 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.restbase.model.cache.CacheNames;
+import com.restbase.model.ConstraintValidators;
 import com.restbase.model.domain.Test;
 import com.restbase.model.repository.TestRepository;
 
@@ -39,56 +38,35 @@ public class TestService {
 		testRepository.save(test);
 	}
 	
-	public void update(Long id, Test test) {
-		logger.info("Updating Test");
-		Test toUpdate = findById(id);
-		testRepository.save(toUpdate);
-	}
-	
-	public void update(UUID id, Test test) {
+	public void updateByUUID(UUID id, Test test) {
 		logger.info("Updating Test BY UUID");
+		ConstraintValidators.checkIfParameterIsNull(id, "id");
+		ConstraintValidators.checkIfParameterIsNull(test, "test");
 		Test toUpdate = findByUuid(id);
+		String message = String.format("Id %s could not be found", id);
+		ConstraintValidators.checkNull(toUpdate, message);
 		testRepository.save(toUpdate);
 	}
 	
-	public Test findById(Long id) {
+	public Test findByPk(Long id) {
 		logger.info("Finding Test");
+		ConstraintValidators.checkIfParameterIsNull(id, "pk");
 		return testRepository.findOne(id);
 	}
 	
 	public Test findByUuid(UUID uuid) {
 		logger.info("Finding Test By UUID");
+		ConstraintValidators.checkIfParameterIsNull(uuid, "id");
 		return testRepository.findOneByUuid(uuid);
 	}
 	
-	public void delete(Long id) {
-		logger.info("Deleting Test");
+	public void deleteByPk(Long id) {
+		logger.info("Deleting Test");		
+		Test toDelete = findByPk(id);
+		String message = String.format("Id %s could not be found", id);
+		ConstraintValidators.checkNull(toDelete, message);
 		testRepository.delete(id);
 	}
-	
-	@Cacheable(CacheNames.TEST)
-	public Long getPrimeNumberAtPosition(Long enesimPrime) {
-		long primeCounter = 0;
-		long primeNumber = 0;
-		for (long i = 0; primeCounter <= enesimPrime; i++) {
-			if (isPrime(i)) {
-				primeCounter++;
-				primeNumber = i;
-			}
-		}
-		return primeNumber;
-	}
 
-	private boolean isPrime(long n) {
-		// check if n is a multiple of 2
-		if (n % 2 == 0)
-			return false;
-		// if not, then just check the odds
-		for (long i = 3; i * i <= n; i += 2) {
-			if (n % i == 0)
-				return false;
-		}
-		return true;
-	}
 
 }
