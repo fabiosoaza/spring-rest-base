@@ -10,9 +10,9 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.restbase.model.ConstraintValidators;
 import com.restbase.model.domain.Test;
 import com.restbase.model.repository.TestRepository;
+import com.restbase.model.validator.ConstraintValidators;
 
 @CacheConfig
 @Service

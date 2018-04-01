@@ -1,4 +1,4 @@
-package com.restbase.model;
+package com.restbase.model.validator;
 
 public class ConstraintValidators {
 

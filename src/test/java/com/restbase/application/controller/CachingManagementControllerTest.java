@@ -5,6 +5,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Arrays;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -15,36 +17,32 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import com.restbase.model.service.CacheTesterService;
-
+import com.restbase.model.service.CachingManagementService;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-@SpringBootTest(classes={CacheTesterController.class})
+@SpringBootTest(classes = { CachingManagementController.class })
 @EnableWebMvc
-public class CacheTesterControllerTest {
+public class CachingManagementControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
-	
-		
+
 	@MockBean
-	private CacheTesterService cacheTesterService;
-	
-		
+	private CachingManagementService cachingManagementService;
+
 	@Test
-	public void methodGetShouldResultNotFoundIfRequestedIdDontExist() throws Exception {
-		Mockito.when(cacheTesterService.getPrimeNumberAtPosition(Long.valueOf(0L))).thenReturn(Long.valueOf(1L));		
-		mockMvc.perform(
-					get("/cacheTester/cached-prime-number").param("number", "0")				
-					.accept(MediaType.TEXT_PLAIN)		
-				)
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("The prime number at position 0 is 1.")))
-                ;                
-		
+	public void shouldListAllCacheNames() throws Exception {
+		Mockito.when(cachingManagementService.listAllCacheNames()).thenReturn(Arrays.asList("Cache 1", "Cache 2"));
+		MvcResult result = mockMvc.perform(get("/cachingManagement").accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()).andExpect(content().string(containsString("Cache 1"))
+
+				).andReturn();
+		System.out.println(result.getResponse().getContentAsString());
+
 	}
 
 }
