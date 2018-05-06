@@ -30,7 +30,6 @@ after_deploy:
 deploy:
   provider: releases
   api_key: $GITHUB_TOKEN
-  script: ./deploy.sh
   on:
     branch: master
   file: "spring-rest-base-0.0.1-$TRAVIS_BUILD_NUMBER-app.tar.gz"
