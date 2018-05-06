@@ -21,9 +21,9 @@ function set_development_and_increment_version(){
    a=( ${VERSION_WITHOUT_QUALIFIER//./ } )                  
    ((a[1]++))            
    VERSION="${a[0]}.${a[1]}.${a[2]}-SNAPSHOT"   
-   mvn versions:set -DnewVersion=$NEW_VERSION-SNAPSHOT 
+   mvn versions:set -DnewVersion=$VERSION
    git add pom.xml 
-   git commit -m 'Setting develop version '$NEW_VERSION-SNAPSHOT   
+   git commit -m 'Setting develop version to '$VERSION   
 }
 
 
