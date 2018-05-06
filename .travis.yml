@@ -11,6 +11,7 @@ cache:
     - $HOME/.m2
 
 before_script:
+    - git fetch --prune
     - ./set-versions.sh release
 
 after_success:
