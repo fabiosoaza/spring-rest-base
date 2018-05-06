@@ -30,7 +30,8 @@ function set_development_and_increment_version(){
 
 function push(){
    last_tag=$(git describe --abbrev=0 --tags)
-   git push "https://$GITHUB_TOKEN@github.com/fabiosoaza/spring-rest-base" master $last_tag > /dev/null 2>&1
+   git push "https://$GITHUB_TOKEN@github.com/fabiosoaza/spring-rest-base" master
+   git push "https://$GITHUB_TOKEN@github.com/fabiosoaza/spring-rest-base" $last_tag
    git pull
 
 }
