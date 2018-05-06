@@ -6,7 +6,6 @@ stages:
   - test
   - name: deploy
     if: branch = master
- 		
 
 notifications:
   slack:
