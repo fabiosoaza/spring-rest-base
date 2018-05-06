@@ -1,12 +1,6 @@
 language: java
 jdk: oraclejdk8
 
-stages:
-  - compile
-  - test
-  - name: deploy
-    if: branch = master
-
 notifications:
   slack:
     on_success: change
@@ -16,22 +10,13 @@ cache:
   directories:
     - $HOME/.m2
 
+before_script:
+    - ./set-versions.sh release
+
 after_success:
    - bash <(curl -s https://codecov.io/bash)      
    - mvn clean test jacoco:report
-
-before_deploy:
-   - ./set-versions.sh release
-
-after_deploy:
    - ./set-versions.sh develop
+   - ./set-versions.sh push
 
-deploy:
-  provider: releases
-  api_key: $GITHUB_TOKEN
-  on:
-    branch: master
-  file: "spring-rest-base-0.0.1-$TRAVIS_BUILD_NUMBER-app.tar.gz"
-  skip_cleanup: true
-  condition: $TRAVIS_BRANCH =~ ^master$
 
