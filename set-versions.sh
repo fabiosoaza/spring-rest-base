@@ -15,8 +15,7 @@ function set_release_version(){
    echo "Current Branch: $BRANCH_NAME"
    mvn versions:set -DnewVersion=$VERSION  
    git add pom.xml
-   git commit -m '[skip ci]Generating release version '$VERSION
-   git checkout master
+   git commit -m '[skip ci] - Generating release version '$VERSION
    git merge --ff-only "$TRAVIS_COMMIT"
    git tag -a "v$VERSION" -m "Tagging version v$VERSION"
 }
@@ -31,7 +30,7 @@ function set_development_and_increment_version(){
    echo "Current Branch:  $BRANCH_NAME" 
    mvn versions:set -DnewVersion=$VERSION
    git add pom.xml 
-   git commit -m '[skip ci]Setting develop version to '$VERSION  
+   git commit -m '[skip ci] - Setting develop version to '$VERSION  
    git checkout master
    git merge --ff-only "$TRAVIS_COMMIT"  
 }
