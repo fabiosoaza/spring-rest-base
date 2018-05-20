@@ -10,18 +10,20 @@ function get_artifact_version_without_classifier(){
 
 function set_release_version(){
    VERSION="$(get_artifact_version_without_classifier)-RELEASE"   
-   BRANCH_NAME="$(git rev-parse --abbrev-ref HEAD)"
+   BRANCH_NAME="$TRAVIS_BRANCH"
    echo "Generating release version : $VERSION"
    echo "Current Branch: $BRANCH_NAME"
    mvn versions:set -DnewVersion=$VERSION  
    git add pom.xml
    git commit -m '[skip ci]Generating release version '$VERSION
+   git checkout master
+   git merge --ff-only "$TRAVIS_COMMIT"
    git tag -a "v$VERSION" -m "Tagging version v$VERSION"
 }
 
 function set_development_and_increment_version(){
    VERSION_WITHOUT_QUALIFIER="$(get_artifact_version_without_classifier)"   
-   BRANCH_NAME="$(git rev-parse --abbrev-ref HEAD)"
+   BRANCH_NAME="$TRAVIS_BRANCH"
    a=( ${VERSION_WITHOUT_QUALIFIER//./ } )                  
    ((a[1]++))            
    VERSION="${a[0]}.${a[1]}.0-SNAPSHOT"  
@@ -29,15 +31,15 @@ function set_development_and_increment_version(){
    echo "Current Branch:  $BRANCH_NAME" 
    mvn versions:set -DnewVersion=$VERSION
    git add pom.xml 
-   git commit -m '[skip ci]Setting develop version to '$VERSION   
+   git commit -m '[skip ci]Setting develop version to '$VERSION  
+   git checkout master
+   git merge --ff-only "$TRAVIS_COMMIT"  
 }
 
 
 
 function push(){
-   last_tag=$(git describe --abbrev=0 --tags)
-   git checkout master
-   git merge --ff-only "$TRAVIS_COMMIT" 
+   last_tag=$(git describe --abbrev=0 --tags)  
    git push "https://${GITHUB_TOKEN}@github.com/fabiosoaza/spring-rest-base" master
   # git push "https://$GITHUB_TOKEN@github.com/fabiosoaza/spring-rest-base" $last_tag
    git pull
