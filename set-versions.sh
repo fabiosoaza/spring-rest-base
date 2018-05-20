@@ -10,6 +10,7 @@ function get_artifact_version_without_classifier(){
 
 function set_release_version(){
    VERSION="$(get_artifact_version_without_classifier)-RELEASE"
+   echo "Generating release version : $VERSION"
    mvn versions:set -DnewVersion=$VERSION  
    git add pom.xml
    git commit -m '[skip ci]Generating release version '$VERSION
@@ -20,7 +21,8 @@ function set_development_and_increment_version(){
    VERSION_WITHOUT_QUALIFIER="$(get_artifact_version_without_classifier)"   
    a=( ${VERSION_WITHOUT_QUALIFIER//./ } )                  
    ((a[1]++))            
-   VERSION="${a[0]}.${a[1]}.0-SNAPSHOT"   
+   VERSION="${a[0]}.${a[1]}.0-SNAPSHOT"  
+   echo "Setting develop version to: $VERSION" 
    mvn versions:set -DnewVersion=$VERSION
    git add pom.xml 
    git commit -m '[skip ci]Setting develop version to '$VERSION   
