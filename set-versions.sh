@@ -20,7 +20,7 @@ function set_development_and_increment_version(){
    VERSION_WITHOUT_QUALIFIER="$(get_artifact_version_without_classifier)"   
    a=( ${VERSION_WITHOUT_QUALIFIER//./ } )                  
    ((a[1]++))            
-   VERSION="${a[0]}.${a[1]}.${a[2]}-SNAPSHOT"   
+   VERSION="${a[0]}.${a[1]}.0-SNAPSHOT"   
    mvn versions:set -DnewVersion=$VERSION
    git add pom.xml 
    git commit -m '[skip ci]Setting develop version to '$VERSION   
