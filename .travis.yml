@@ -13,6 +13,9 @@ cache:
 before_script:
     - git fetch --prune
     - ./set-versions.sh set_release_version
+    
+script:
+    - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V    
 
 after_success:
    - bash <(curl -s https://codecov.io/bash)      
