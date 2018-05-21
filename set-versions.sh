@@ -10,7 +10,7 @@ function get_artifact_version_without_classifier(){
 
 function set_release_version(){
    VERSION="$(get_artifact_version_without_classifier)-RELEASE"   
-   BRANCH_NAME="$TRAVIS_BRANCH"
+   BRANCH_NAME="$TRAVIS_COMMIT"
    echo "Generating release version : $VERSION"
    echo "Current Branch: $BRANCH_NAME"
    mvn versions:set -DnewVersion=$VERSION    
@@ -18,7 +18,7 @@ function set_release_version(){
 
 function set_snapshot_version(){
     VERSION_WITHOUT_QUALIFIER="$(get_artifact_version_without_classifier)" 
-    BRANCH_NAME="$TRAVIS_BRANCH"
+    BRANCH_NAME="$TRAVIS_COMMIT"
     
     a=( ${VERSION_WITHOUT_QUALIFIER//./ } )                  
     ((a[1]++))            
@@ -31,25 +31,25 @@ function set_snapshot_version(){
 
 function tag_release(){
     RELEASE_VERSION="$(get_artifact_version_without_classifier)-RELEASE"
-    BRANCH_NAME="$TRAVIS_BRANCH"
+    BRANCH_NAME="$TRAVIS_COMMIT"
     echo "Current Branch: $BRANCH_NAME"
     git add pom.xml
     git commit -m '[skip ci] - Generating release version '$RELEASE_VERSION
     git tag -a "v$RELEASE_VERSION" -m "Tagging version v$RELEASE_VERSION"
     git checkout master
-    git merge --ff-only "$TRAVIS_COMMIT" 
+    git merge --ff-only "$BRANCH_NAME" 
 }
 
 function tag_snapshot(){    
     SNAPSHOT_VERSION="$(get_artifact_version_without_classifier)-SNAPSHOT"
-    BRANCH_NAME="$TRAVIS_BRANCH"
+    BRANCH_NAME="$TRAVIS_COMMIT"
     echo "Current Branch: $BRANCH_NAME"
 
     git add pom.xml 
     git commit -m '[skip ci] - Setting develop version to '$SNAPSHOT_VERSION 
 
     git checkout master
-    git merge --ff-only "$TRAVIS_COMMIT" 
+    git merge --ff-only "$BRANCH_NAME" 
 
 }
 
