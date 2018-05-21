@@ -4,7 +4,7 @@
 
 	<groupId>com.restbase</groupId>
 	<artifactId>spring-rest-base</artifactId>
-	<version>0.10.0-SNAPSHOT</version>
+	<version>0.10.0-RELEASE</version>
 	<packaging>jar</packaging>
 
 	<name>spring-rest-base</name>
