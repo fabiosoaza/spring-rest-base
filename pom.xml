@@ -186,5 +186,13 @@
 		</pluginRepository>
 	</pluginRepositories>
 
+	<distributionManagement> 
+		<repository> 
+			<id>bintray-fabiosoaza-spring-rest-base</id> 
+			<name>fabiosoaza-spring-rest-base</name> 
+			<url>https://api.bintray.com/maven/fabiosoaza/spring-rest-base/spring-rest-base/;publish=1</url> 
+			</repository> 
+	</distributionManagement>
+
 
 </project>
