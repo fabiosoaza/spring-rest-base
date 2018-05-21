@@ -13,7 +13,7 @@ cache:
 before_script:
     - git fetch --prune
     - ./set-versions.sh set_release_version
-    
+
 script:
     - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V    
 
@@ -22,6 +22,7 @@ after_success:
    - mvn clean test jacoco:report
 
 after_script:
+    - ./set-versions.sh set_release_version
     - ./set-versions.sh tag_release  
     - ./set-versions.sh set_snapshot_version 
     - ./set-versions.sh tag_snapshot
