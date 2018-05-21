@@ -16,6 +16,7 @@ function set_release_version(){
    mvn versions:set -DnewVersion=$VERSION  
    git add pom.xml
    git commit -m '[skip ci] - Generating release version '$VERSION
+   git checkout master
    git merge --ff-only "$TRAVIS_COMMIT"
    git tag -a "v$VERSION" -m "Tagging version v$VERSION"
 }
@@ -40,7 +41,7 @@ function set_development_and_increment_version(){
 function push(){
    last_tag=$(git describe --abbrev=0 --tags)  
    git push "https://${GITHUB_TOKEN}@github.com/fabiosoaza/spring-rest-base" master
-  # git push "https://$GITHUB_TOKEN@github.com/fabiosoaza/spring-rest-base" $last_tag
+   git push "https://${GITHUB_TOKEN}@github.com/fabiosoaza/spring-rest-base" $last_tag
    git pull
 
 }
