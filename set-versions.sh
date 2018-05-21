@@ -13,29 +13,32 @@ function set_release_version(){
    BRANCH_NAME="$TRAVIS_BRANCH"
    echo "Generating release version : $VERSION"
    echo "Current Branch: $BRANCH_NAME"
-   mvn versions:set -DnewVersion=$VERSION  
-   git add pom.xml
-   git commit -m '[skip ci] - Generating release version '$VERSION
-   git checkout master
-   git merge --ff-only "$TRAVIS_COMMIT"
-   git tag -a "v$VERSION" -m "Tagging version v$VERSION"
+   mvn versions:set -DnewVersion=$VERSION    
 }
 
 function set_development_and_increment_version(){
+   RELEASE_VERSION="$(get_artifact_version_without_classifier)-RELEASE"  
    VERSION_WITHOUT_QUALIFIER="$(get_artifact_version_without_classifier)"   
    BRANCH_NAME="$TRAVIS_BRANCH"
+
+   git add pom.xml
+   git commit -m '[skip ci] - Generating release version '$RELEASE_VERSION
+   git tag -a "v$RELEASE_VERSION" -m "Tagging version v$RELEASE_VERSION"
+
    a=( ${VERSION_WITHOUT_QUALIFIER//./ } )                  
    ((a[1]++))            
-   VERSION="${a[0]}.${a[1]}.0-SNAPSHOT"  
-   echo "Setting develop version to: $VERSION"
+   SNAPSHOT_VERSION="${a[0]}.${a[1]}.0-SNAPSHOT"  
+
+   echo "Setting develop version to: $SNAPSHOT_VERSION"
    echo "Current Branch:  $BRANCH_NAME" 
-   mvn versions:set -DnewVersion=$VERSION
+   mvn versions:set -DnewVersion=$SNAPSHOT_VERSION
+
    git add pom.xml 
-   git commit -m '[skip ci] - Setting develop version to '$VERSION  
+   git commit -m '[skip ci] - Setting develop version to '$SNAPSHOT_VERSION  
+
    git checkout master
    git merge --ff-only "$TRAVIS_COMMIT"  
 }
-
 
 
 function push(){
