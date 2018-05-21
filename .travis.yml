@@ -10,11 +10,11 @@ cache:
   directories:
     - $HOME/.m2
 
-before_script:
-    - git fetch --prune
-    - ./set-versions.sh set_release_version
+install: true    
 
 script:
+    - git fetch --prune
+    - ./set-versions.sh set_release_version
     - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V    
 
 after_success:
