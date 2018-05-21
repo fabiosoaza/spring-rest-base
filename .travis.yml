@@ -20,11 +20,8 @@ script:
 after_success:
    - bash <(curl -s https://codecov.io/bash)      
    - mvn clean test jacoco:report
+   - ./set-versions.sh release
+   - ./set-versions.sh start 
+   - ./set-versions.sh push       
 
-after_script:
-    - ./set-versions.sh set_release_version
-    - ./set-versions.sh tag_release  
-    - ./set-versions.sh set_snapshot_version 
-    - ./set-versions.sh tag_snapshot
-    - ./set-versions.sh push     
 
