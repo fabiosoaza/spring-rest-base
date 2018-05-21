@@ -16,28 +16,41 @@ function set_release_version(){
    mvn versions:set -DnewVersion=$VERSION    
 }
 
-function set_development_and_increment_version(){
-   RELEASE_VERSION="$(get_artifact_version_without_classifier)-RELEASE"  
-   VERSION_WITHOUT_QUALIFIER="$(get_artifact_version_without_classifier)"   
-   BRANCH_NAME="$TRAVIS_BRANCH"
+function set_snapshot_version(){
+    VERSION_WITHOUT_QUALIFIER="$(get_artifact_version_without_classifier)" 
+    BRANCH_NAME="$TRAVIS_BRANCH"
+    
+    a=( ${VERSION_WITHOUT_QUALIFIER//./ } )                  
+    ((a[1]++))            
+    SNAPSHOT_VERSION="${a[0]}.${a[1]}.0-SNAPSHOT"
+    
+    echo "Setting develop version to: $SNAPSHOT_VERSION"
+    echo "Current Branch:  $BRANCH_NAME" 
+    mvn versions:set -DnewVersion=$SNAPSHOT_VERSION 
+}
 
-   git add pom.xml
-   git commit -m '[skip ci] - Generating release version '$RELEASE_VERSION
-   git tag -a "v$RELEASE_VERSION" -m "Tagging version v$RELEASE_VERSION"
+function tag_release(){
+    RELEASE_VERSION="$(get_artifact_version_without_classifier)-RELEASE"
+    BRANCH_NAME="$TRAVIS_BRANCH"
+    echo "Current Branch: $BRANCH_NAME"
+    git add pom.xml
+    git commit -m '[skip ci] - Generating release version '$RELEASE_VERSION
+    git tag -a "v$RELEASE_VERSION" -m "Tagging version v$RELEASE_VERSION"
+    git checkout master
+    git merge --ff-only "$TRAVIS_COMMIT" 
+}
 
-   a=( ${VERSION_WITHOUT_QUALIFIER//./ } )                  
-   ((a[1]++))            
-   SNAPSHOT_VERSION="${a[0]}.${a[1]}.0-SNAPSHOT"  
+function tag_snapshot(){    
+    SNAPSHOT_VERSION="$(get_artifact_version_without_classifier)-SNAPSHOT"
+    BRANCH_NAME="$TRAVIS_BRANCH"
+    echo "Current Branch: $BRANCH_NAME"
 
-   echo "Setting develop version to: $SNAPSHOT_VERSION"
-   echo "Current Branch:  $BRANCH_NAME" 
-   mvn versions:set -DnewVersion=$SNAPSHOT_VERSION
+    git add pom.xml 
+    git commit -m '[skip ci] - Setting develop version to '$SNAPSHOT_VERSION 
 
-   git add pom.xml 
-   git commit -m '[skip ci] - Setting develop version to '$SNAPSHOT_VERSION  
+    git checkout master
+    git merge --ff-only "$TRAVIS_COMMIT" 
 
-   git checkout master
-   git merge --ff-only "$TRAVIS_COMMIT"  
 }
 
 
@@ -56,12 +69,18 @@ git fetch
 git reset --hard
 
  case $1 in
-        "develop")
-            set_development_and_increment_version
-            ;;
-        "release")
+        "set_release_version")
             set_release_version
             ;;
+        "set_snapshot_version")
+            set_snapshot_version
+            ;;
+        "tag_release")
+            tag_release
+            ;; 
+        "tag_snapshot")
+            tag_snapshot
+            ;;                         
         "push")
             push
             ;;   

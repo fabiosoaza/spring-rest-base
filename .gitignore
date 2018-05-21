@@ -5,3 +5,4 @@ target/
 bin/
 *.lck
 logs/*.log
+*.versionsBackup
