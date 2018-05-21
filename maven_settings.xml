@@ -1,5 +1,9 @@
-<server> 
-    <id>bintray-fabiosoaza-spring-rest-base</id> 
-    <username>${env.CI_DEPLOY_USERNAME}</username> 
-    <password>${env.CI_DEPLOY_PASSORD}</password> 
-</server>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <servers>
+    <server> 
+        <id>bintray-fabiosoaza-spring-rest-base</id> 
+        <username>${env.CI_DEPLOY_USERNAME}</username> 
+        <password>${env.CI_DEPLOY_PASSORD}</password> 
+    </server>
+  </servers>
+</settings>
