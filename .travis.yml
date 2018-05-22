@@ -13,16 +13,10 @@ cache:
 install: true    
 
 script:
-    - git fetch --prune
-    - ./set-versions.sh set_release_version
-    - mvn install -B -V    
-
+    - ./set-versions.sh install
+    
 after_success:
-   - bash <(curl -s https://codecov.io/bash)      
-   - mvn clean test jacoco:report
-   - ./set-versions.sh release
-   - mvn deploy --settings maven_settings.xml
-   - ./set-versions.sh start 
-   - ./set-versions.sh push       
+   - ./set-versions.sh after_success   
+      
 
 

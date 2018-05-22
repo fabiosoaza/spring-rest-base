@@ -83,6 +83,32 @@ function push(){
 
 }
 
+function install(){
+    echo "Running install task"
+    if [[ "$TRAVIS_BRANCH" == "master" ]]; then
+        git fetch --prune
+        set_release_version
+    fi
+    mvn install -B -V  
+}
+
+function after_success(){
+    echo "Running after sucess task"
+    bash <(curl -s https://codecov.io/bash)
+    echo "Publishing codecoverage report"
+    mvn clean test jacoco:report
+    if [[ "$TRAVIS_BRANCH" == "master" ]]; then
+        echo "Releasing version"
+        release
+        echo "Sending artifacts to repository"
+        mvn deploy --settings maven_settings.xml
+        echo "Changing pom to next snapshot versions"
+        start 
+        echo "Merging to branch master e sending to scm"
+        push  
+    fi
+
+}
 
 INTEGRATION_BRANCH="build_$TRAVIS_JOB_NUMBER"
 
@@ -106,7 +132,13 @@ INTEGRATION_BRANCH="build_$TRAVIS_JOB_NUMBER"
             ;; 
         "release")
             release
-            ;;                         
+            ;;      
+        "install")
+            install
+            ;;     
+        "after_success")
+            after_success
+            ;;                                    
         "push")
             push
             ;;   
