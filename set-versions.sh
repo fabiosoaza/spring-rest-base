@@ -85,7 +85,7 @@ function push(){
 
 function install(){
     echo "Running install task"
-    if [[ "$TRAVIS_BRANCH" == "master" ] && ["$TRAVIS_PULL_REQUEST" = "false"]]; then
+    if [ "$TRAVIS_BRANCH" == "master" ] && ["$TRAVIS_PULL_REQUEST" = "false"]; then
         git fetch --prune
         set_release_version
     fi
@@ -97,7 +97,7 @@ function after_success(){
     bash <(curl -s https://codecov.io/bash)
     echo "Publishing codecoverage report"
     mvn clean test jacoco:report
-    if [[ "$TRAVIS_BRANCH" == "master" ] && ["$TRAVIS_PULL_REQUEST" = "false"]]; then
+    if [ "$TRAVIS_BRANCH" == "master" ] && ["$TRAVIS_PULL_REQUEST" = "false"]; then
         echo "Releasing version"
         release
         echo "Sending artifacts to repository"
