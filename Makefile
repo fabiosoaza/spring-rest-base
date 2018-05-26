@@ -8,10 +8,13 @@ docker-stop:
 		docker-compose kill
 		docker-compose rm -fv 
 
-docker-up:	docker-stop			
+docker-build-up:	docker-stop			
 		docker-compose up --build -d		
 
-docker: docker-build docker-up
+docker-up:	docker-stop			
+		docker-compose up -d
+
+docker: docker-build docker-build-up
 
 docker-run-liquibase-update: 
 	docker-compose run liquibase run-liquibase update 

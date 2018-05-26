@@ -12,6 +12,8 @@ RUN tar xvf /tmp/spring-rest-base*tar.gz -C /tmp
 
 RUN cp -r /tmp/spring-rest-base*/* $APP_DIR
 
+RUN ln -s $APP_DIR/bin/spring-rest-base*jar $APP_DIR/bin/spring-rest-base.jar 
+
 COPY spring-rest-base.start.sh $APP_DIR/run.sh
 
 RUN chmod +x $APP_DIR/run.sh
