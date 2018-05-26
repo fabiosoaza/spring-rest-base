@@ -96,7 +96,7 @@ function after_success(){
     echo "Running after sucess task"
     bash <(curl -s https://codecov.io/bash)
     echo "Publishing codecoverage report"
-    mvn clean test jacoco:report
+    mvn clean test jacoco:report sonar:sonar
     if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
         echo "Releasing version"
         release
