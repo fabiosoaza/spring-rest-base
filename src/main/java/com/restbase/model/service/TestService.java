@@ -1,6 +1,7 @@
 package com.restbase.model.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -51,7 +52,8 @@ public class TestService {
 	public Test findByPk(Long id) {
 		logger.info("Finding Test");
 		ConstraintValidators.checkIfParameterIsNull(id, "pk");
-		return testRepository.findOne(id);
+		Optional<Test> entity = testRepository.findById(id);
+		return entity.orElse(null);
 	}
 	
 	public Test findByUuid(UUID uuid) {
@@ -65,7 +67,7 @@ public class TestService {
 		Test toDelete = findByPk(id);
 		String message = String.format("Id %s could not be found", id);
 		ConstraintValidators.checkNull(toDelete, message);
-		testRepository.delete(id);
+		testRepository.deleteById(id);
 	}
 	
 	public void deleteByUUID(UUID uuid) {
@@ -73,7 +75,7 @@ public class TestService {
 		Test toDelete = findByUuid(uuid);
 		String message = String.format("Id %s could not be found", uuid);
 		ConstraintValidators.checkNull(toDelete, message);
-		testRepository.delete(toDelete.getId());
+		testRepository.deleteById(toDelete.getId());
 	}
 
 
