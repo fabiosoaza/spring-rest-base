@@ -101,7 +101,7 @@ function after_success(){
         echo "Releasing version"
         release
         echo "Sending artifacts to repository"
-        mvn deploy --settings maven_settings.xml
+        mvn deploy -DskipTests --settings maven_settings.xml
         echo "Changing pom to next snapshot versions"
         start 
         echo "Merging to branch master e sending to scm"
