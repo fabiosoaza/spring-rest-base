@@ -20,12 +20,15 @@ import com.restbase.model.validator.ConstraintValidators;
 @Transactional
 public class TestService {
 
+	private static final String ID_COULD_NOT_BE_FOUND_MSG = "Id %s could not be found";
+
 	private static final Logger logger = LoggerFactory.getLogger(TestService.class);
 
 	@Autowired
 	private TestRepository testRepository;
 
 	public TestService() {
+		// default constructor
 	}
 
 	public List<Test> list() {
@@ -44,7 +47,7 @@ public class TestService {
 		ConstraintValidators.checkIfParameterIsNull(id, "id");
 		ConstraintValidators.checkIfParameterIsNull(test, "test");
 		Test toUpdate = findByUuid(id);
-		String message = String.format("Id %s could not be found", id);
+		String message = String.format(ID_COULD_NOT_BE_FOUND_MSG, id);
 		ConstraintValidators.checkNull(toUpdate, message);
 		testRepository.save(toUpdate);
 	}
@@ -65,7 +68,7 @@ public class TestService {
 	public void deleteByPk(Long id) {
 		logger.info("Deleting Test");		
 		Test toDelete = findByPk(id);
-		String message = String.format("Id %s could not be found", id);
+		String message = String.format(ID_COULD_NOT_BE_FOUND_MSG, id);
 		ConstraintValidators.checkNull(toDelete, message);
 		testRepository.deleteById(id);
 	}
@@ -73,7 +76,7 @@ public class TestService {
 	public void deleteByUUID(UUID uuid) {
 		logger.info("Deleting Test");		
 		Test toDelete = findByUuid(uuid);
-		String message = String.format("Id %s could not be found", uuid);
+		String message = String.format(ID_COULD_NOT_BE_FOUND_MSG, uuid);
 		ConstraintValidators.checkNull(toDelete, message);
 		testRepository.deleteById(toDelete.getId());
 	}

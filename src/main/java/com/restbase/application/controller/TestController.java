@@ -32,10 +32,11 @@ public class TestController {
 	private TestService testService;	
 	
 	public TestController() {
+		// default constructor
 	}
 		
 	@RequestMapping(method = RequestMethod.GET)	
-	public @ResponseBody ResponseEntity<?> list(){
+	public @ResponseBody ResponseEntity<List<Test>> list(){
 		logger.info("Request Listing");
 		List<Test> list = testService.list();
 		HttpStatus status = !CollectionUtils.isEmpty(list) ? HttpStatus.OK: HttpStatus.NOT_FOUND;
