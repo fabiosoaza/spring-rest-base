@@ -19,7 +19,7 @@ import com.restbase.application.constant.Constants;
 
 public class MDCInterceptor  extends OncePerRequestFilter {
 	
-	private static final Logger logger = LoggerFactory.getLogger(MDCInterceptor.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MDCInterceptor.class);
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -29,11 +29,11 @@ public class MDCInterceptor  extends OncePerRequestFilter {
 
 		if (!StringUtils.isEmpty(tracerBullet)) {
 			setTracerBullet(tracerBullet);
-			logger.debug("Header {} value put into MDC is {}", Constants.TRACER_BULLET, tracerBullet);
+			LOG.debug("Header {} value put into MDC is {}", Constants.TRACER_BULLET, tracerBullet);
 		} else {
 			tracerBullet = UUID.randomUUID().toString();
 			setTracerBullet(tracerBullet);
-			logger.debug("Header {} is empty. Generated local {} value is {}", Constants.TRACER_BULLET, Constants.TRACER_BULLET, tracerBullet);
+			LOG.debug("Header {} is empty. Generated local {} value is {}", Constants.TRACER_BULLET, Constants.TRACER_BULLET, tracerBullet);
 		}
 
 		StopWatch watch = new StopWatch();
@@ -42,7 +42,7 @@ public class MDCInterceptor  extends OncePerRequestFilter {
 		filterChain.doFilter(request, response);
 
 		watch.stop();
-		logger.info("Request processed in {} ms", watch.getTotalTimeMillis());
+		LOG.info("Request processed in {} ms", watch.getTotalTimeMillis());
 
 		MDC.remove(Constants.TRACER_BULLET);
 

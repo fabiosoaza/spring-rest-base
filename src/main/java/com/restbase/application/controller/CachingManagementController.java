@@ -20,10 +20,11 @@ public class CachingManagementController {
 	private CachingManagementService cachingManagementService;
 	
 	public CachingManagementController() {
+		// default constructor
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public @ResponseBody ResponseEntity<?> listAll(){	
+	public @ResponseBody ResponseEntity<Collection<String> > listAll(){	
 		Collection<String> cacheNames = cachingManagementService.listAllCacheNames();
 		return ResponseEntity.status(HttpStatus.OK).body(cacheNames);
 	}
