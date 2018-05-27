@@ -1,6 +1,12 @@
 language: java
 jdk: oraclejdk8
 
+addons:
+  sonarcloud:
+    organization: "fabiosoaza-github" 
+    token:
+      secure: $SONAR_TOKEN
+
 notifications:
   slack:
     on_success: change
@@ -9,6 +15,7 @@ notifications:
 cache:
   directories:
     - $HOME/.m2
+    - $HOME/.sonar/cache
 
 install: true    
 
