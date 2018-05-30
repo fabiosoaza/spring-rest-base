@@ -1,0 +1,72 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: database-service
+  namespace: default
+spec:
+  type: ExternalName
+  externalName: 10.0.2.2
+  ports:
+    - port: 5432
+      targetPort: 5432
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-rest-base-app
+  labels:
+    app: spring-rest-base-app
+    tier: back-end
+spec:
+  selector:
+    app: spring-rest-base-app
+  type: NodePort
+  ports:
+  - name: spring-rest-base-app
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+    nodePort: 30080
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: spring-rest-base-app
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: spring-rest-base-app        
+        tier: backend
+    spec:
+      containers:
+      - name: spring-rest-base-app
+        image: fabiosoaza/spring-rest-base-app
+        env:
+        - name: DB_HOST
+          value: database-service
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: properties 
+              key: db_name  
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: properties 
+              key: db_port
+        - name: DB_USER
+          valueFrom:
+            configMapKeyRef:
+              name: properties 
+              key: db_user  
+        - name: DB_PASS
+          valueFrom:
+            configMapKeyRef:
+              name: properties 
+              key: db_pass                                                          
+        ports:
+        - containerPort: 8080
+        imagePullPolicy: IfNotPresent      
