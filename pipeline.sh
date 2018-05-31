@@ -99,7 +99,7 @@ function install(){
 function build_and_push_image(){
     REGISTRY="registry.heroku.com"
     IMAGE_NAME="fabiosoaza/spring-rest-base-app:$(get_artifact_version)"
-    TAG_NAME="registry.heroku.com/spring-rest-base-app/web"
+    TAG_NAME="registry.heroku.com/spring-rest-base/web"
     echo "Building image $IMAGE_NAME"
     docker build . -f Dockerfile -t $IMAGE_NAME
      echo "Tagging image $IMAGE_NAME to $TAG_NAME"
