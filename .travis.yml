@@ -20,10 +20,10 @@ cache:
 install: true    
 
 script:
-    - ./set-versions.sh install
+    - ./pipeline.sh install
     
 after_success:
-   - ./set-versions.sh after_success   
+   - ./pipeline.sh after_success   
       
 
 
