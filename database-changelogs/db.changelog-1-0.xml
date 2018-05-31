@@ -21,7 +21,6 @@
 			WITH (
 				OIDS=FALSE
 			);
-			ALTER TABLE public.tests OWNER TO postgres;
 		</sql>
 	</changeSet>
 
