@@ -2,9 +2,13 @@
 
 
 
+function get_artifact_version(){
+    ARTIFACT_VERSION=$(grep -E -m 1 -o "<version>(.*)</version>" pom.xml | sed 's/<version>//' | sed 's/<\/version>//')
+    echo $ARTIFACT_VERSION
+}
 
 function get_artifact_version_without_classifier(){
-    ARTIFACT_VERSION=$(grep -E -m 1 -o "<version>(.*)</version>" pom.xml | sed 's/<version>//' | sed 's/<\/version>//')
+    ARTIFACT_VERSION="$(get_artifact_version)"
     VERSION_WITHOUT_QUALIFIER="${ARTIFACT_VERSION%%-*}"
     echo $VERSION_WITHOUT_QUALIFIER
 }
@@ -92,11 +96,26 @@ function install(){
     mvn install -B -V  
 }
 
+function build_and_push_image(){
+    REGISTRY="registry.heroku.com"
+    IMAGE_NAME="fabiosoaza/spring-rest-base-app:$(get_artifact_version)"
+    TAG_NAME="registry.heroku.com/spring-rest-base/web"
+    echo "Building image $IMAGE_NAME"
+    docker build . -f Dockerfile -t $IMAGE_NAME
+     echo "Tagging image $IMAGE_NAME to $TAG_NAME"
+    docker tag $IMAGE_NAME $TAG_NAME
+    echo "Pushing image $IMAGE_NAME to "
+    docker login --username=_ --password=$HEROKU_TOKEN $REGISTRY
+    docker push $TAG_NAME
+
+}
+
 function after_success(){
     echo "Running after sucess task"
     bash <(curl -s https://codecov.io/bash)
     echo "Publishing codecoverage report"
     mvn clean test jacoco:report org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
+    build_and_push_image
     if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
         echo "Releasing version"
         release

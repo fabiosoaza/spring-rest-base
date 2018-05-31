@@ -1,6 +1,11 @@
 language: java
 jdk: oraclejdk8
 
+sudo: required
+
+services:
+- docker
+
 addons:
   sonarcloud:
     organization: "fabiosoaza-github" 
@@ -20,10 +25,10 @@ cache:
 install: true    
 
 script:
-    - ./set-versions.sh install
+    - ./pipeline.sh install
     
 after_success:
-   - ./set-versions.sh after_success   
+   - ./pipeline.sh after_success   
       
 
 
