@@ -24,23 +24,25 @@ docker: docker-build docker-build-up
 docker-run-liquibase-update: 
 	docker-compose run liquibase run-liquibase update 
 
-push-image-minikube: 
+minikube-build-push-image: 
 	@eval $$(minikube docker-env) ;\
 	docker build . -f Dockerfile -t fabiosoaza/spring-rest-base-app:latest
 
-create-configmaps:
-	kubectl create configmap properties --from-literal=db_host=10.0.2.2 --from-literal=db_name=test --from-literal=db_port=5432 --from-literal=db_user=test --from-literal=db_pass=test
+k8s-create-configmaps:
+	kubectl create configmap properties --from-literal=db_host=10.0.2.2 --from-literal=db_name=test --from-literal=db_port=5432 --from-literal=db_user=test --from-literal=db_pass=test --from-literal=ssl_mode=disable
 
-create-k8s-services:	
+k8s-create-services:	
 	kubectl create -f app.k8s.yaml	
 
-apply-k8s-services:	
+k8s-apply-services:	
 	kubectl apply -f app.k8s.yaml	
 
-delete-k8s-services:
+k8s-delete-services:
 	kubectl delete endpoints,services,pods,deployments,daemonsets,configmaps --all	
 
-deploy-k8s-services: delete-k8s-services create-configmaps create-k8s-services
+k8s-deploy-services: k8s-delete-services k8s-create-configmaps k8s-create-services
 
-run-k8s-service:
+k8s-run-service:
 	minikube service spring-rest-base-app 	
+
+minikube-deploy-run-services: k8s-deploy-services k8s-run-service	
