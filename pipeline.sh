@@ -141,7 +141,7 @@ git config --global user.email 'travis@travis-ci.org'
 git config --global user.name 'Travis'
 git remote set-branches --add origin master
 git fetch
-git reset --hard
+
 
 INTEGRATION_BRANCH="build_$TRAVIS_JOB_NUMBER"
 
