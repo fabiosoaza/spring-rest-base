@@ -119,15 +119,14 @@ function after_success(){
     echo "Running after sucess task"
     bash <(curl -s https://codecov.io/bash)
     echo "Publishing codecoverage report"
-    mvn clean test jacoco:report org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar   
-    build_and_push_image
-    deploy
+    mvn clean test jacoco:report org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar      
     if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
         echo "Releasing version"
         release
         echo "Sending artifacts to repository"
         mvn deploy -DskipTests --settings maven_settings.xml
-       
+        build_and_push_image
+        deploy
         echo "Changing pom to next snapshot versions"
         start 
         echo "Merging to branch master e sending to scm"
