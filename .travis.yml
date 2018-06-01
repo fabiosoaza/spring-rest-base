@@ -6,6 +6,8 @@ sudo: required
 services:
 - docker
 
+
+
 addons:
   sonarcloud:
     organization: "fabiosoaza-github" 
@@ -24,16 +26,12 @@ cache:
 
 install: true    
 
+before_script:
+    - curl https://cli-assets.heroku.com/install-standalone.sh | sh
+
 script:
     - ./pipeline.sh install
     
 after_success:
    - ./pipeline.sh after_success   
-      
-deploy:
-  provider: heroku
-  api_key: $HEROKU_TOKEN
-  app: spring-rest-base
-  on: 
-    all_branches: true
-
+     
