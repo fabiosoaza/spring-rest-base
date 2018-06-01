@@ -30,5 +30,10 @@ script:
 after_success:
    - ./pipeline.sh after_success   
       
-
+deploy:
+  provider: heroku
+  api_key: $HEROKU_TOKEN
+  app: spring-rest-base
+  on: 
+    all_branches: true
 
