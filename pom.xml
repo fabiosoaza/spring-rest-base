@@ -22,9 +22,10 @@
 		<java.version>1.8</java.version>
 		<bonecp.version>0.8.0.RELEASE</bonecp.version>	
 		<gson.version>2.8.2</gson.version>		
-		 <sonar.coverage.exclusions>
+		<sonar.coverage.exclusions>
 		 com/restbase/application/config/*,com/restbase/application/constant/*
-		 </sonar.coverage.exclusions>	
+		</sonar.coverage.exclusions>
+		<application.version.number>${version}</application.version.number>	
 
 	</properties>
 
