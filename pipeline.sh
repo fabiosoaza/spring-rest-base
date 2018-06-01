@@ -102,9 +102,9 @@ function build_and_push_image(){
     TAG_NAME="registry.heroku.com/spring-rest-base/web"
     echo "Building image $IMAGE_NAME"
     docker build . -f Dockerfile -t $IMAGE_NAME
-     echo "Tagging image $IMAGE_NAME to $TAG_NAME"
+    echo "Tagging image $IMAGE_NAME to $TAG_NAME"
     docker tag $IMAGE_NAME $TAG_NAME
-    echo "Pushing image $IMAGE_NAME to "
+    echo "Pushing image $IMAGE_NAME to $REGISTRY"
     docker login --username=_ --password=$HEROKU_TOKEN $REGISTRY
     docker push $TAG_NAME
 
@@ -114,13 +114,15 @@ function after_success(){
     echo "Running after sucess task"
     bash <(curl -s https://codecov.io/bash)
     echo "Publishing codecoverage report"
-    mvn clean test jacoco:report org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
-    build_and_push_image
+    mvn clean test jacoco:report org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar   
     if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
         echo "Releasing version"
         release
         echo "Sending artifacts to repository"
         mvn deploy -DskipTests --settings maven_settings.xml
+        build_and_push_image
+        echo "Deploying application"
+        heroku container:release web --app spring-rest-base
         echo "Changing pom to next snapshot versions"
         start 
         echo "Merging to branch master e sending to scm"
