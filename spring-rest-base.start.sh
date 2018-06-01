@@ -1,3 +1,3 @@
 #/bin/sh
 
-java -jar bin/spring-rest-base.jar
+java $JAVA_OPTS -jar bin/spring-rest-base.jar
