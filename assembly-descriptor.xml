@@ -16,7 +16,7 @@
 			</includes>
 		</fileSet>
 		<fileSet>
-			<directory>src/main/resources</directory>
+			<directory>logs</directory>
 			<outputDirectory>logs</outputDirectory>
 			<directoryMode>755</directoryMode>
 			<excludes>
@@ -31,6 +31,7 @@
 			<fileMode>644</fileMode>
 			<lineEnding>unix</lineEnding>
 			<outputDirectory>config</outputDirectory>
+			<filtered>true</filtered>
 			<destName>application.properties</destName>
 		</file>
 	</files>
