@@ -112,8 +112,7 @@ public class Todo {
 		if (obj == null || !(obj instanceof Todo) ) {
 			return false;
 		}
-		Todo other = (Todo) obj;
-		return Objects.equals(uuid, other.getUuid());
+		return Objects.equals(uuid, ((Todo) obj).getUuid());
 	}
 
 	@Override
