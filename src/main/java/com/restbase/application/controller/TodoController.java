@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.restbase.model.domain.Todo;
+import com.restbase.model.dto.TodoDTO;
 import com.restbase.model.service.TodoService;
 
 @RestController
@@ -73,8 +74,9 @@ public class TodoController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<String> save(@RequestBody Todo todo){
+	public ResponseEntity<String> save(@RequestBody TodoDTO todoDto){
 		logger.info("Request Saving");
+		Todo todo = new Todo(todoDto);
 		todoService.save(todo);
 		Map<String, Object> map = new HashMap<>();
 		map.put("uuid", todo.getUuid().toString());		
@@ -83,13 +85,14 @@ public class TodoController {
 	}
 	
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody Todo todo){
+	public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody TodoDTO todoDto){
 		logger.info("Request updating, id {}.", id);
 		try{
+			Todo todo = new Todo(todoDto);
 			todoService.updateByUUID(getUuid(id), todo);
 		}
 		catch(IllegalArgumentException ex){
-			logger.error("Error updating, id "+id+", request "+todo+".", ex);
+			logger.error("Error updating, id "+id+", request "+todoDto+".", ex);
 			return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
 		}
 		

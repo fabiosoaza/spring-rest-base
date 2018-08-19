@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.restbase.model.domain.Test;
+import com.restbase.model.dto.TestDTO;
 import com.restbase.model.service.TestService;
 
 @RestController
@@ -73,8 +74,9 @@ public class TestController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<String> save(@RequestBody Test test){
+	public ResponseEntity<String> save(@RequestBody TestDTO testDto){
 		logger.info("Request Saving");
+		Test test = new Test(testDto);
 		testService.save(test);
 		Map<String, Object> map = new HashMap<>();
 		map.put("uuid", test.getUuid().toString());		
@@ -83,13 +85,14 @@ public class TestController {
 	}
 	
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody Test test){
+	public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody TestDTO testDto){
 		logger.info("Request updating, id {}.", id);
 		try{
+			Test test = new Test(testDto);
 			testService.updateByUUID(getUuid(id), test);
 		}
 		catch(IllegalArgumentException ex){
-			logger.error("Error updating, id "+id+", request "+test+".", ex);
+			logger.error("Error updating, id "+id+", request "+testDto+".", ex);
 			return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
 		}
 		
