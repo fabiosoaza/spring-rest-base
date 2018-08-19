@@ -33,6 +33,8 @@ services:
                   - DB_USER=test
                   - DB_PASS=test
                   - SSL_MODE=disable
+            volumes: 
+                  - ./database-changelogs/:/liquibase/changelogs/
 
 networks:
   default:

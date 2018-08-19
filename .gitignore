@@ -4,5 +4,5 @@ target/
 *.project
 bin/
 *.lck
-logs/*.log
+logs/*.log*
 *.versionsBackup
