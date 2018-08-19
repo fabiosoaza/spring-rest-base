@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.restbase.model.domain.Test;
-import com.restbase.model.dto.TestDTO;
+import com.restbase.model.dto.TestDto;
 import com.restbase.model.service.TestService;
 
 @RestController
@@ -74,7 +74,7 @@ public class TestController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<String> save(@RequestBody TestDTO testDto){
+	public ResponseEntity<String> save(@RequestBody TestDto testDto){
 		logger.info("Request Saving");
 		Test test = new Test(testDto);
 		testService.save(test);
@@ -85,7 +85,7 @@ public class TestController {
 	}
 	
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody TestDTO testDto){
+	public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody TestDto testDto){
 		logger.info("Request updating, id {}.", id);
 		try{
 			Test test = new Test(testDto);

@@ -2,14 +2,14 @@ package com.restbase.model.dto;
 
 import java.util.UUID;
 
-public class TodoDTO {
+public class TodoDto {
 
 	private UUID uuid = UUID.randomUUID();
 	private String title;
 	private String description;
 	private Boolean completed;
 	
-	public TodoDTO() {
+	public TodoDto() {
 		// Default DTO
 	}
 

@@ -2,11 +2,11 @@ package com.restbase.model.dto;
 
 import java.util.UUID;
 
-public class TestDTO {
+public class TestDto {
 
 	private UUID uuid = UUID.randomUUID();
 	
-	public TestDTO() {
+	public TestDto() {
 		// Default constructor
 	}
 	

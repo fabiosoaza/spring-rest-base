@@ -25,8 +25,7 @@ public class CachingManagementController {
 	
 	@GetMapping
 	public @ResponseBody ResponseEntity<Collection<String> > listAll(){	
-		Collection<String> cacheNames = cachingManagementService.listAllCacheNames();
-		return ResponseEntity.status(HttpStatus.OK).body(cacheNames);
+		return ResponseEntity.status(HttpStatus.OK).body(cachingManagementService.listAllCacheNames());
 	}
 
 }
