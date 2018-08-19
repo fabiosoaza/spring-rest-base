@@ -6,8 +6,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,7 +22,7 @@ public class InfoController {
 		// default constructor
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, path="version")	
+	@GetMapping(path="version")	
 	public @ResponseBody ResponseEntity<Map<String,String>> version(){
 		Map<String,String> map = new HashMap<>();
 		map.put("version", versionNumber);
