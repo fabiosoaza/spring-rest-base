@@ -98,21 +98,14 @@ public class Todo {
 		this.completed = completed;
 	}
 	
-	public Boolean getCompleted() {
-		return completed;
-	}
-	
 	@Override
 	public int hashCode() {
 		return Objects.hash(uuid);
 	}
 
 	@Override
-	public boolean equals(Object obj) {		
-		if (obj == null || !(obj instanceof Todo) ) {
-			return false;
-		}
-		return Objects.equals(uuid, ((Todo) obj).getUuid());
+	public boolean equals(Object obj) {
+		return (obj instanceof Todo) && Objects.equals(uuid, ((Todo) obj).getUuid());
 	}
 
 	@Override

@@ -11,10 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,7 +38,7 @@ public class TestController {
 		// default constructor
 	}
 		
-	@RequestMapping(method = RequestMethod.GET)	
+	@GetMapping	
 	public @ResponseBody ResponseEntity<List<Test>> list(){
 		logger.info("Request Listing");
 		List<Test> list = testService.list();
@@ -43,7 +46,7 @@ public class TestController {
 		return ResponseEntity.status(status).body(list);
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
+	@GetMapping(value = "/{id}")
 	public ResponseEntity<Test> view(@PathVariable("id") String id){
 		logger.info("Request Viewing, id {}.", id);
 		Test test = null;
@@ -69,7 +72,7 @@ public class TestController {
 		return uuid;
 	}
 	
-	@RequestMapping(method = RequestMethod.POST)
+	@PostMapping
 	public ResponseEntity<String> save(@RequestBody Test test){
 		logger.info("Request Saving");
 		testService.save(test);
@@ -79,7 +82,7 @@ public class TestController {
 		return new ResponseEntity<>(json, HttpStatus.CREATED);
 	}
 	
-	@RequestMapping(method = RequestMethod.PUT, value = "/{id}")
+	@PutMapping(value = "/{id}")
 	public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody Test test){
 		logger.info("Request updating, id {}.", id);
 		try{
@@ -93,7 +96,7 @@ public class TestController {
 		return new ResponseEntity<>(id, HttpStatus.OK);
 	}
 	
-	@RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<String> delete(@PathVariable("id") String id){
 		logger.info("Request removing, id {}.", id);
 		try{
