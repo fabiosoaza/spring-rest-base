@@ -27,7 +27,7 @@ public class Todo {
 	
 	@Column(name="uuid", nullable = false, updatable = false)
 	@Type(type = "pg-uuid")
-	private UUID uuid = UUID.randomUUID();;
+	private UUID uuid = UUID.randomUUID();
 	
 	@Column(name="title", nullable = false)
 	private String title;

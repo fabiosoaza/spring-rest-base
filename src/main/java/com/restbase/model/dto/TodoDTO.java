@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public class TodoDTO {
 
-	private UUID uuid = UUID.randomUUID();;
+	private UUID uuid = UUID.randomUUID();
 	private String title;
 	private String description;
 	private Boolean completed;
