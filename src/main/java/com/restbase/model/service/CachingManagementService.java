@@ -13,8 +13,7 @@ public class CachingManagementService {
 	private CacheManager cacheManager;
 
 	public Collection<String> listAllCacheNames() {
-		Collection<String> cacheNames = cacheManager.getCacheNames();
-		return cacheNames;
+		return cacheManager.getCacheNames();
 	}
 
 }

@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.restbase.model.domain.Todo;
-import com.restbase.model.dto.TodoDTO;
+import com.restbase.model.dto.TodoDto;
 import com.restbase.model.service.TodoService;
 
 @RestController
@@ -74,7 +74,7 @@ public class TodoController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<String> save(@RequestBody TodoDTO todoDto){
+	public ResponseEntity<String> save(@RequestBody TodoDto todoDto){
 		logger.info("Request Saving");
 		Todo todo = new Todo(todoDto);
 		todoService.save(todo);
@@ -85,7 +85,7 @@ public class TodoController {
 	}
 	
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody TodoDTO todoDto){
+	public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody TodoDto todoDto){
 		logger.info("Request updating, id {}.", id);
 		try{
 			Todo todo = new Todo(todoDto);

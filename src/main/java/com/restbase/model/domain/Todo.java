@@ -13,7 +13,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.restbase.model.dto.TodoDTO;
+import com.restbase.model.dto.TodoDto;
 
 @Entity
 @Table(name = "todos")
@@ -46,16 +46,12 @@ public class Todo {
 		this.completed = completed;
 	}	
 	
-	public Todo(TodoDTO dto) {
-		this.uuid = dto.getUuid();
-		this.title = dto.getTitle();
-		this.description = dto.getDescription();
-		this.completed = dto.isCompleted();
+	public Todo(TodoDto dto) {
+		this(dto.getUuid(), dto.getTitle(), dto.getDescription(), dto.isCompleted());		
 	}
 	
 	public Todo(UUID uuid) {
-		super();
-		this.uuid = uuid;
+		this(uuid, null, null, null);
 	}
 
 	public Todo(String title, String description, Boolean completed) {
@@ -63,7 +59,7 @@ public class Todo {
 	}
 	
 	public Todo() {
-		this.uuid = UUID.randomUUID();
+		//Default constructor
 	}
 	
 	public Long getId() {

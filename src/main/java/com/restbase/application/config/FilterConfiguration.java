@@ -10,8 +10,8 @@ import com.restbase.application.controller.interceptor.MDCInterceptor;
 public class FilterConfiguration {
 	
 	@Bean
-	public FilterRegistrationBean mdcFilterRegistrationBean() {
-		FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+	public FilterRegistrationBean<MDCInterceptor> mdcFilterRegistrationBean() {
+		FilterRegistrationBean<MDCInterceptor> registrationBean = new FilterRegistrationBean<MDCInterceptor>();
 		MDCInterceptor mdcFilter = new MDCInterceptor();
 		registrationBean.setFilter(mdcFilter);
 		registrationBean.setOrder(1);

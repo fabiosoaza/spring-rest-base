@@ -13,7 +13,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.restbase.model.dto.TestDTO;
+import com.restbase.model.dto.TestDto;
 
 @Entity
 @Table(name = "tests")
@@ -30,10 +30,11 @@ public class Test {
 	private UUID uuid = UUID.randomUUID();
 
 	public Test() {
+		//Default constructor
 	}
 	
-	public Test(TestDTO dto) {
-		this.uuid = dto.getUuid();
+	public Test(TestDto dto) {
+		this(dto.getUuid());
 	}
 
 	public Test(UUID uuid) {
