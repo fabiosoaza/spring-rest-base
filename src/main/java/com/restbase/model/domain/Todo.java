@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.restbase.model.dto.TodoDTO;
 
 @Entity
 @Table(name = "todos")
@@ -26,7 +27,7 @@ public class Todo {
 	
 	@Column(name="uuid", nullable = false, updatable = false)
 	@Type(type = "pg-uuid")
-	private UUID uuid;
+	private UUID uuid = UUID.randomUUID();
 	
 	@Column(name="title", nullable = false)
 	private String title;
@@ -44,6 +45,13 @@ public class Todo {
 		this.description = description;
 		this.completed = completed;
 	}	
+	
+	public Todo(TodoDTO dto) {
+		this.uuid = dto.getUuid();
+		this.title = dto.getTitle();
+		this.description = dto.getDescription();
+		this.completed = dto.isCompleted();
+	}
 	
 	public Todo(UUID uuid) {
 		super();

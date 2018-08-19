@@ -128,6 +128,9 @@ public class TodoControllerTest {
 	@Test
 	public void methodPostShouldPersist() throws Exception {		
 		Map<String, Object> map = new HashMap<>();
+		map.put("title", "Create integration tests");
+		map.put("description", "Create integration tests");
+		map.put("completed", false);	
 		String json = jsonString(map);
 		mockMvc.perform(post("/todos/")
 				.contentType(MediaType.APPLICATION_JSON)
