@@ -103,6 +103,7 @@
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<configuration>
 				 <excludes>
+				 		<exclude>com/restbase/model/dto/**/*</exclude>
         				<exclude>com/restbase/application/config/**/*</exclude>
         				<exclude>com/restbase/application/constant/**/*</exclude>
         				<exclude>**/*SpringRestBaseApplication.*</exclude>

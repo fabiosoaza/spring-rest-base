@@ -11,7 +11,7 @@ public class FilterConfiguration {
 	
 	@Bean
 	public FilterRegistrationBean<MDCInterceptor> mdcFilterRegistrationBean() {
-		FilterRegistrationBean<MDCInterceptor> registrationBean = new FilterRegistrationBean<MDCInterceptor>();
+		FilterRegistrationBean<MDCInterceptor> registrationBean = new FilterRegistrationBean<>();
 		MDCInterceptor mdcFilter = new MDCInterceptor();
 		registrationBean.setFilter(mdcFilter);
 		registrationBean.setOrder(1);
