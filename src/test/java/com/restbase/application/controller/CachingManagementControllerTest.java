@@ -9,7 +9,7 @@ import java.util.Arrays;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,6 +21,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.restbase.model.service.CachingManagementService;
+
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
@@ -36,11 +38,15 @@ public class CachingManagementControllerTest {
 
 	@Test
 	public void shouldListAllCacheNames() throws Exception {
-		Mockito.when(cachingManagementService.listAllCacheNames()).thenReturn(Arrays.asList("Cache 1", "Cache 2"));
-		MvcResult result = mockMvc.perform(get("/cachingManagement").accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk()).andExpect(content().string(containsString("Cache 1"))
-
-				).andReturn();
+		when(cachingManagementService.listAllCacheNames()).thenReturn(Arrays.asList("Cache 1", "Cache 2"));
+		MvcResult result = mockMvc
+				.perform(
+						get("/cachingManagement")
+						.accept(MediaType.APPLICATION_JSON))
+						.andExpect(status().isOk())
+						.andExpect(content().string(containsString("Cache 1"))
+				)
+				.andReturn();
 		System.out.println(result.getResponse().getContentAsString());
 
 	}

@@ -1,6 +1,9 @@
 package com.restbase.application.controller.interceptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -15,7 +18,6 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -38,7 +40,7 @@ public class MDCInterceptorTest {
 	public void shouldCreateARandomTracerBulletIdIfHeaderIsNotSet() throws ServletException, IOException {
 		ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
 		mdcInterceptor.doFilterInternal(request, response, filterChain);
-		Mockito.verify(mdcInterceptor).setTracerBullet(captor.capture());
+		verify(mdcInterceptor).setTracerBullet(captor.capture());
 		String tracerBulletId = captor.getValue();
 		assertThat(tracerBulletId).isNotBlank();
 	}
@@ -49,7 +51,7 @@ public class MDCInterceptorTest {
 		ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
 		setUpRequestHeader(Constants.TRACER_BULLET_HEADER, tracerId);
 		mdcInterceptor.doFilterInternal(request, response, filterChain);
-		Mockito.verify(mdcInterceptor).setTracerBullet(captor.capture());
+		verify(mdcInterceptor).setTracerBullet(captor.capture());
 		String tracerBulletId = captor.getValue();
 		assertThat(tracerBulletId).isNotBlank();
 		assertThat(tracerBulletId).isNotEqualTo(tracerId);
@@ -61,14 +63,14 @@ public class MDCInterceptorTest {
 		ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
 		setUpRequestHeader(Constants.TRACER_BULLET_HEADER, tracerId);
 		mdcInterceptor.doFilterInternal(request, response, filterChain);
-		Mockito.verify(mdcInterceptor).setTracerBullet(captor.capture());
+		verify(mdcInterceptor).setTracerBullet(captor.capture());
 		String tracerBulletId = captor.getValue();
  		assertThat(tracerBulletId).isNotBlank();
 		assertThat(tracerBulletId).isEqualTo(tracerId);
 	}
 	
 	private void setUpRequestHeader(String headerName, String headerValue){
-		Mockito.when(request.getHeader(Mockito.eq(headerName))).thenReturn(headerValue);
+		when(request.getHeader(eq(headerName))).thenReturn(headerValue);
 	}
 
 }

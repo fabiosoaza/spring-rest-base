@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +21,7 @@ import java.util.UUID;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -50,7 +51,7 @@ public class TodoControllerTest {
 	@Test
 	public void methodGetShouldReturnNotFoundIfNothingIsFound() throws Exception {
 		List<Todo> todos = new ArrayList<>();
-		Mockito.when(todoService.list()).thenReturn(todos);		
+		when(todoService.list()).thenReturn(todos);		
 		mockMvc.perform(
 					get("/todos/")					
 					.accept(MediaType.APPLICATION_JSON)
@@ -69,7 +70,7 @@ public class TodoControllerTest {
 		Todo todo2 = new Todo(id2, null, null, null);
 		List<Todo> todos = Arrays.asList(todo1, todo2);
 		
-		Mockito.when(todoService.list()).thenReturn(todos);		
+		when(todoService.list()).thenReturn(todos);		
 		mockMvc.perform(
 					get("/todos")					
 					.accept(MediaType.APPLICATION_JSON)					
@@ -78,8 +79,7 @@ public class TodoControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$.[0].uuid", equalTo(id1.toString())))
-                .andExpect(jsonPath("$.[1].uuid", equalTo(id2.toString())))
-                ;
+                .andExpect(jsonPath("$.[1].uuid", equalTo(id2.toString())));
                 	
 		
 	}
@@ -89,7 +89,7 @@ public class TodoControllerTest {
 		UUID id = UUID.randomUUID();
 		Todo todo1 = new Todo(id, null, null, null);
 
-		Mockito.when(todoService.findByUuid(Mockito.eq(id))).thenReturn(todo1);		
+		when(todoService.findByUuid(eq(id))).thenReturn(todo1);		
 		mockMvc.perform(
 					get("/todos/"+id)				
 					.accept(MediaType.APPLICATION_JSON)		
@@ -117,7 +117,7 @@ public class TodoControllerTest {
 	public void methodGetShouldResultNotFoundIfRequestedIdDontExist() throws Exception {
 		UUID id = UUID.randomUUID();
 
-		Mockito.when(todoService.findByUuid(Mockito.eq(id))).thenReturn(null);
+		when(todoService.findByUuid(eq(id))).thenReturn(null);
 		mockMvc.perform(get("/todos/" + id)
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotFound())
@@ -137,8 +137,7 @@ public class TodoControllerTest {
 				.content(json)
 				)
 				.andExpect(status().isCreated())
-				.andExpect(content().string(containsString("uuid"))
-						
+				.andExpect(content().string(containsString("uuid"))						
 				);
 
 	}
@@ -157,7 +156,7 @@ public class TodoControllerTest {
 	
 	@Test
 	public void methodUpdateShouldThrowAnExceptionIfIdIsNotFound() throws Exception {		
-		Mockito.doThrow(new IllegalArgumentException("Id not found")).when(todoService).updateByUUID(Mockito.any(UUID.class), Mockito.any(Todo.class));
+		doThrow(new IllegalArgumentException("Id not found")).when(todoService).updateByUUID(any(UUID.class), any(Todo.class));
 		
 		String json = jsonString(new HashMap<>());
 		mockMvc.perform(put("/todos/"+UUID.randomUUID().toString())				
@@ -206,7 +205,7 @@ public class TodoControllerTest {
 	
 	@Test
 	public void methodDeleteShouldThrowAnExceptionIfIdIsNotFound() throws Exception {		
-		Mockito.doThrow(new IllegalArgumentException("Id not found")).when(todoService).deleteByUUID(Mockito.any(UUID.class));
+		doThrow(new IllegalArgumentException("Id not found")).when(todoService).deleteByUUID(any(UUID.class));
 		
 		String json = jsonString(new HashMap<>());
 		mockMvc.perform(delete("/todos/"+UUID.randomUUID().toString())				
