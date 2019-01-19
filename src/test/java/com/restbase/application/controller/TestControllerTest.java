@@ -3,9 +3,13 @@ package com.restbase.application.controller;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -20,7 +24,6 @@ import java.util.UUID;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -49,7 +52,7 @@ public class TestControllerTest {
 	@Test
 	public void methodGetShouldReturnNotFoundIfNothingIsFound() throws Exception {
 		List<com.restbase.model.domain.Test> tests = new ArrayList<>();
-		Mockito.when(testService.list()).thenReturn(tests);		
+		when(testService.list()).thenReturn(tests);		
 		mockMvc.perform(
 					get("/tests/")					
 					.accept(MediaType.APPLICATION_JSON)
@@ -68,7 +71,7 @@ public class TestControllerTest {
 		com.restbase.model.domain.Test test2 = new com.restbase.model.domain.Test(id2);
 		List<com.restbase.model.domain.Test> tests = Arrays.asList(test1, test2);
 		
-		Mockito.when(testService.list()).thenReturn(tests);		
+		when(testService.list()).thenReturn(tests);		
 		mockMvc.perform(
 					get("/tests")					
 					.accept(MediaType.APPLICATION_JSON)					
@@ -77,8 +80,7 @@ public class TestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$.[0].uuid", equalTo(id1.toString())))
-                .andExpect(jsonPath("$.[1].uuid", equalTo(id2.toString())))
-                ;
+                .andExpect(jsonPath("$.[1].uuid", equalTo(id2.toString())));
                 	
 		
 	}
@@ -88,7 +90,7 @@ public class TestControllerTest {
 		UUID id = UUID.randomUUID();
 		com.restbase.model.domain.Test test1 = new com.restbase.model.domain.Test(id);
 
-		Mockito.when(testService.findByUuid(Mockito.eq(id))).thenReturn(test1);		
+		when(testService.findByUuid(eq(id))).thenReturn(test1);		
 		mockMvc.perform(
 					get("/tests/"+id)				
 					.accept(MediaType.APPLICATION_JSON)		
@@ -116,7 +118,7 @@ public class TestControllerTest {
 	public void methodGetShouldResultNotFoundIfRequestedIdDontExist() throws Exception {
 		UUID id = UUID.randomUUID();
 
-		Mockito.when(testService.findByUuid(Mockito.eq(id))).thenReturn(null);
+		when(testService.findByUuid(eq(id))).thenReturn(null);
 		mockMvc.perform(get("/tests/" + id)
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotFound())
@@ -132,8 +134,7 @@ public class TestControllerTest {
 				.content(json)
 				)
 				.andExpect(status().isCreated())
-				.andExpect(content().string(containsString("uuid"))
-						
+				.andExpect(content().string(containsString("uuid"))						
 				);
 
 	}
@@ -152,7 +153,7 @@ public class TestControllerTest {
 	
 	@Test
 	public void methodUpdateShouldThrowAnExceptionIfIdIsNotFound() throws Exception {		
-		Mockito.doThrow(new IllegalArgumentException("Id not found")).when(testService).updateByUUID(Mockito.any(UUID.class), Mockito.any(com.restbase.model.domain.Test.class));
+		doThrow(new IllegalArgumentException("Id not found")).when(testService).updateByUUID(any(UUID.class), any(com.restbase.model.domain.Test.class));
 		
 		String json = jsonString(new HashMap<>());
 		mockMvc.perform(put("/tests/"+UUID.randomUUID().toString())				
@@ -201,7 +202,7 @@ public class TestControllerTest {
 	
 	@Test
 	public void methodDeleteShouldThrowAnExceptionIfIdIsNotFound() throws Exception {		
-		Mockito.doThrow(new IllegalArgumentException("Id not found")).when(testService).deleteByUUID(Mockito.any(UUID.class));
+		doThrow(new IllegalArgumentException("Id not found")).when(testService).deleteByUUID(any(UUID.class));
 		
 		String json = jsonString(new HashMap<>());
 		mockMvc.perform(delete("/tests/"+UUID.randomUUID().toString())				
