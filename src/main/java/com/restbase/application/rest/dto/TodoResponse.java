@@ -1,16 +1,25 @@
-package com.restbase.model.dto;
+package com.restbase.application.rest.dto;
 
+import java.util.Objects;
 import java.util.UUID;
 
-public class TodoDto {
+public class TodoResponse {
 
-	private UUID uuid = UUID.randomUUID();
+	private UUID uuid;
 	private String title;
 	private String description;
 	private Boolean completed;
 	
-	public TodoDto() {
+	public TodoResponse() {
 		// Default DTO
+	}
+	
+	public TodoResponse(UUID uuid, String title, String description, Boolean completed) {
+		super();
+		this.uuid = uuid;
+		this.title = title;
+		this.description = description;
+		this.completed = completed;
 	}
 
 	public UUID getUuid() {
@@ -43,6 +52,16 @@ public class TodoDto {
 
 	public void setCompleted(Boolean completed) {
 		this.completed = completed;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(uuid);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return (obj instanceof TodoResponse) && Objects.equals(uuid, ((TodoResponse) obj).getUuid());
 	}
 	
 	

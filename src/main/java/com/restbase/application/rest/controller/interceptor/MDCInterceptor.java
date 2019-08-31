@@ -1,4 +1,4 @@
-package com.restbase.application.controller.interceptor;
+package com.restbase.application.rest.controller.interceptor;
 
 import java.io.IOException;
 import java.util.UUID;

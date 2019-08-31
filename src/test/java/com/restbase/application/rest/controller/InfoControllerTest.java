@@ -1,4 +1,4 @@
-package com.restbase.application.controller;
+package com.restbase.application.rest.controller;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -15,6 +15,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
+import com.restbase.application.rest.controller.InfoController;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc

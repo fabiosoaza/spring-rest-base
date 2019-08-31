@@ -1,4 +1,4 @@
-package com.restbase.application.controller;
+package com.restbase.application.rest.controller;
 
 import java.util.HashMap;
 import java.util.Map;

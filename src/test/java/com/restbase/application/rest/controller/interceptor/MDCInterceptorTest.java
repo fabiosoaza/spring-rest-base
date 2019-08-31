@@ -1,4 +1,4 @@
-package com.restbase.application.controller.interceptor;
+package com.restbase.application.rest.controller.interceptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -22,6 +22,7 @@ import org.mockito.Spy;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.restbase.application.constant.Constants;
+import com.restbase.application.rest.controller.interceptor.MDCInterceptor;
 
 @RunWith(SpringRunner.class)
 public class MDCInterceptorTest {

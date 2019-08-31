@@ -1,16 +1,16 @@
-package com.restbase.application.controller;
+package com.restbase.application.rest.controller;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,9 +21,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.gson.Gson;
+import com.restbase.application.rest.converter.TodoRequestConverter;
+import com.restbase.application.rest.converter.TodoResponseConverter;
+import com.restbase.application.rest.dto.TodoRequest;
+import com.restbase.application.rest.dto.TodoResponse;
 import com.restbase.model.domain.Todo;
-import com.restbase.model.dto.TodoDto;
 import com.restbase.model.service.TodoService;
 
 @RestController
@@ -33,31 +35,41 @@ public class TodoController {
 	private static final Logger logger = LoggerFactory.getLogger(TodoController.class);
 	
 	@Autowired
-	private TodoService todoService;	
+	private TodoService todoService;
+	
+	@Autowired
+	private TodoRequestConverter todoRequestConverter;
+	
+	@Autowired
+	private TodoResponseConverter todoResponseConverter;
 	
 	public TodoController() {
 		// default constructor
 	}
 		
 	@GetMapping	
-	public @ResponseBody ResponseEntity<List<Todo>> list(){
+	public @ResponseBody ResponseEntity<List<TodoResponse>> list(){
 		logger.info("Request Listing");
-		List<Todo> list = todoService.list();
-		HttpStatus status = !CollectionUtils.isEmpty(list) ? HttpStatus.OK: HttpStatus.NOT_FOUND;
-		return ResponseEntity.status(status).body(list);
+		List<TodoResponse> response = Optional.ofNullable(todoService.list())
+				.orElse(Collections.emptyList())
+				.stream()
+				.map(todo->todoResponseConverter.convert(todo))
+				.collect(Collectors.toList());
+		HttpStatus status = !response.isEmpty() ? HttpStatus.OK: HttpStatus.NOT_FOUND;
+		return ResponseEntity.status(status).body(response);
 	}
 	
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Todo> view(@PathVariable("id") String id){
+	public ResponseEntity<TodoResponse> view(@PathVariable("id") String id){
 		logger.info("Request Viewing, id {}.", id);
-		Todo todo = null;
 		try{
-			todo = todoService.findByUuid(getUuid(id));
-			HttpStatus status = todo !=null ? HttpStatus.OK: HttpStatus.NOT_FOUND;
-			return ResponseEntity.status(status).body(todo);
+			Optional<Todo> optional = todoService.findByUuid(getUuid(id));
+			TodoResponse response = optional.isPresent() ? todoResponseConverter.convert(optional.get()): null;		
+			HttpStatus status = optional.isPresent() ? HttpStatus.OK: HttpStatus.NOT_FOUND;
+			return ResponseEntity.status(status).body(response);
 		}
 		catch(IllegalArgumentException ias){
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(todo);
+			return ResponseEntity.notFound().build();
 		}
 	}
 
@@ -74,31 +86,16 @@ public class TodoController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<String> save(@RequestBody TodoDto todoDto){
+	@PutMapping
+	public ResponseEntity<TodoResponse> save(@RequestBody TodoRequest todoDto){
 		logger.info("Request Saving");
-		Todo todo = new Todo(todoDto);
+		Todo todo = todoRequestConverter.convert(todoDto);
 		todoService.save(todo);
-		Map<String, Object> map = new HashMap<>();
-		map.put("uuid", todo.getUuid().toString());		
-	    String json = new Gson().toJson(map);
-		return new ResponseEntity<>(json, HttpStatus.CREATED);
+		TodoResponse response = todoResponseConverter.convert(todo);
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 	
-	@PutMapping(value = "/{id}")
-	public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody TodoDto todoDto){
-		logger.info("Request updating, id {}.", id);
-		try{
-			Todo todo = new Todo(todoDto);
-			todoService.updateByUUID(getUuid(id), todo);
-		}
-		catch(IllegalArgumentException ex){
-			logger.error("Error updating, id "+id+", request "+todoDto+".", ex);
-			return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
-		}
-		
-		return new ResponseEntity<>(id, HttpStatus.OK);
-	}
-	
+
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<String> delete(@PathVariable("id") String id){
 		logger.info("Request removing, id {}.", id);
@@ -107,9 +104,9 @@ public class TodoController {
 		}
 		catch(IllegalArgumentException ex){
 			logger.error("Error deleting id "+id+".", ex);
-			return new ResponseEntity<>("", HttpStatus.NOT_FOUND);
+			return ResponseEntity.notFound().build();
 		}
-		return new ResponseEntity<>("", HttpStatus.OK);
+		return ResponseEntity.ok().build();
 	}
 	
 
