@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -44,76 +45,6 @@ public class TodoServiceTest {
 
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void updateByUUIDShouldThrowAnExceptionIfIdIsNull() {
-		Todo todo = new Todo();
-		try {
-			todoService.updateByUUID(null, todo);
-		} finally {
-			Mockito.verify(todoRepository, Mockito.never()).save(Mockito.eq(todo));
-		}
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void updateByUUIDShouldThrowAnExceptionIfEntityIsNull() {
-		try {
-			UUID uuid = UUID.randomUUID();
-			todoService.updateByUUID(uuid, null);
-		} finally {
-			Mockito.verify(todoRepository, Mockito.never()).save(Mockito.any(Todo.class));
-		}
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void updateByUUIDShouldThrowAnExceptionIfIdIsNotFound() {
-		try {
-			UUID uuid = UUID.randomUUID();
-			Todo todo = new Todo(uuid);
-			Mockito.when(todoRepository.findOneByUuid(Mockito.eq(uuid))).thenReturn(null);
-			todoService.updateByUUID(uuid, todo);
-		} finally {
-			Mockito.verify(todoRepository, Mockito.never()).save(Mockito.any(Todo.class));
-		}
-	}
-
-	@Test
-	public void updateByUUIDShouldUpdateIfIdIsFound() {
-
-		UUID uuid = UUID.randomUUID();
-		Todo todo = new Todo(uuid);
-		Mockito.when(todoRepository.findOneByUuid(Mockito.eq(uuid))).thenReturn(todo);
-
-		Todo todoToUpdate = new Todo(uuid);
-		todoService.updateByUUID(uuid, todoToUpdate);
-
-		Mockito.verify(todoRepository).save(Mockito.eq(todoToUpdate));
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void findByPKShouldThrowAnExceptionIfIdIsNull() {
-		try {
-			todoService.findByPk(null);
-		} finally {
-			Mockito.verify(todoRepository, Mockito.never()).findById(Mockito.any(Long.class));
-		}
-	}
-
-	@Test
-	public void findByPKShouldResultNullIfIdIsNotFound() {
-		Mockito.when(todoRepository.findById(DEFAULT_ID)).thenReturn(Optional.empty());
-		Todo result = todoService.findByPk(DEFAULT_ID);
-		Mockito.verify(todoRepository).findById(Mockito.eq(DEFAULT_ID));
-		assertThat(result).isNull();
-	}
-
-	@Test
-	public void findByPKShouldResultARecordFromRepository() {
-		Todo expectedResult = new Todo();
-		Mockito.when(todoRepository.findById(DEFAULT_ID)).thenReturn(Optional.of(expectedResult));
-		Todo result = todoService.findByPk(DEFAULT_ID);
-		Mockito.verify(todoRepository).findById(Mockito.eq(DEFAULT_ID));
-		assertThat(result).isEqualTo(expectedResult);
-	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void findByUUIDShouldThrowAnExceptionIfUUIDIsNull() {
@@ -127,47 +58,22 @@ public class TodoServiceTest {
 	@Test
 	public void findByUUIDShouldResultNullIfUUIDIsNotFound() {
 		UUID uuid = UUID.randomUUID();
-		Mockito.when(todoRepository.findOneByUuid(uuid)).thenReturn(null);
-		Todo result = todoService.findByUuid(uuid);
+		Mockito.when(todoRepository.findOneByUuid(uuid)).thenReturn(Optional.empty());
+		Optional<Todo> result = todoService.findByUuid(uuid);
 		Mockito.verify(todoRepository).findOneByUuid(Mockito.eq(uuid));
-		assertThat(result).isNull();
+		assertThat(result).isEmpty();
 	}
 
 	@Test
 	public void findByUUIDShouldResultARecordFromRepository() {
 		UUID uuid = UUID.randomUUID();
-		Todo expectedResult = new Todo(uuid);
+		Todo todo = new Todo();
+		todo.setUuid(uuid);		
+		Optional<Todo> expectedResult = Optional.of(todo);
 		Mockito.when(todoRepository.findOneByUuid(uuid)).thenReturn(expectedResult);
-		Todo result = todoService.findByUuid(uuid);
+		Optional<Todo> result = todoService.findByUuid(uuid);
 		Mockito.verify(todoRepository).findOneByUuid(Mockito.eq(uuid));
 		assertThat(result).isEqualTo(expectedResult);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void deleteByPkShouldThrowAnExceptionIfIdIsNull() {
-		try {
-			todoService.deleteByPk(null);
-		} finally {
-			Mockito.verify(todoRepository, Mockito.never()).deleteById(Mockito.any(Long.class));
-		}
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void deleteByPkShouldThrowAnExceptionIfIdIsNotFound() {
-		try {
-			Mockito.when(todoRepository.findById(Mockito.eq(DEFAULT_ID))).thenReturn(Optional.empty());
-			todoService.deleteByPk(DEFAULT_ID);
-		} finally {
-			Mockito.verify(todoRepository, Mockito.never()).deleteById(Mockito.eq(DEFAULT_ID));
-		}
-	}
-
-	@Test
-	public void deleteByPkShouldDeleteIfIdIsFound() {
-		Todo todo = new Todo();
-		Mockito.when(todoRepository.findById(Mockito.eq(DEFAULT_ID))).thenReturn(Optional.of(todo));
-		todoService.deleteByPk(DEFAULT_ID);
-		Mockito.verify(todoRepository).deleteById(Mockito.eq(DEFAULT_ID));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -179,23 +85,22 @@ public class TodoServiceTest {
 		}
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void deleteByUUIDShouldThrowAnExceptionIfIdIsNotFound() {
-		try {
-			UUID uuid = UUID.randomUUID();
-			Mockito.when(todoRepository.findOneByUuid(Mockito.eq(uuid))).thenReturn(null);
-			todoService.deleteByUUID(uuid);
-		} finally {
-			Mockito.verify(todoRepository, Mockito.never()).deleteById(Mockito.any(Long.class));
-		}
+		UUID uuid = UUID.randomUUID();
+		Mockito.when(todoRepository.findOneByUuid(Mockito.eq(uuid))).thenReturn(Optional.empty());
+		Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
+			.isThrownBy(()->todoService.deleteByUUID(uuid));
+		Mockito.verify(todoRepository, Mockito.never()).deleteById(Mockito.any(Long.class));
 	}
 
 	@Test
 	public void deleteUUIDPkShouldDeleteIfIdIsFound() {
 		UUID uuid = UUID.randomUUID();
-		Todo todo = new Todo(uuid);
+		Todo todo = new Todo();
+		todo.setUuid(uuid);
 		todo.setId(DEFAULT_ID);
-		Mockito.when(todoRepository.findOneByUuid(Mockito.eq(uuid))).thenReturn(todo);
+		Mockito.when(todoRepository.findOneByUuid(Mockito.eq(uuid))).thenReturn(Optional.of(todo));
 		todoService.deleteByUUID(uuid);
 		Mockito.verify(todoRepository).deleteById(Mockito.any(Long.class));
 	}

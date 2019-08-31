@@ -4,7 +4,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.restbase.application.controller.interceptor.MDCInterceptor;
+import com.restbase.application.rest.controller.interceptor.MDCInterceptor;
 
 @Configuration
 public class FilterConfiguration {

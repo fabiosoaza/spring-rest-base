@@ -42,43 +42,18 @@ public class TodoService {
 		todoRepository.save(todo);
 	}
 	
-	public void updateByUUID(UUID id, Todo todo) {
-		logger.info("Updating Todo BY UUID");
-		ConstraintValidators.checkIfParameterIsNull(id, "id");
-		ConstraintValidators.checkIfParameterIsNull(todo, "todo");
-		Todo toUpdate = findByUuid(id);
-		String message = String.format(ID_COULD_NOT_BE_FOUND_MSG, id);
-		ConstraintValidators.checkNull(toUpdate, message);
-		todoRepository.save(toUpdate);
-	}
-	
-	public Todo findByPk(Long id) {
-		logger.info("Finding Todo");
-		ConstraintValidators.checkIfParameterIsNull(id, "pk");
-		Optional<Todo> entity = todoRepository.findById(id);
-		return entity.orElse(null);
-	}
-	
-	public Todo findByUuid(UUID uuid) {
+	public Optional<Todo> findByUuid(UUID uuid) {
 		logger.info("Finding Todo By UUID");
-		ConstraintValidators.checkIfParameterIsNull(uuid, "id");
+		ConstraintValidators.checkIfParameterIsNull(uuid, "uuid");
 		return todoRepository.findOneByUuid(uuid);
-	}
-	
-	public void deleteByPk(Long id) {
-		logger.info("Deleting Todo");		
-		Todo toDelete = findByPk(id);
-		String message = String.format(ID_COULD_NOT_BE_FOUND_MSG, id);
-		ConstraintValidators.checkNull(toDelete, message);
-		todoRepository.deleteById(id);
 	}
 	
 	public void deleteByUUID(UUID uuid) {
 		logger.info("Deleting Todo");		
-		Todo toDelete = findByUuid(uuid);
+		Optional<Todo> toDelete = findByUuid(uuid);
 		String message = String.format(ID_COULD_NOT_BE_FOUND_MSG, uuid);
-		ConstraintValidators.checkNull(toDelete, message);
-		todoRepository.deleteById(toDelete.getId());
+		ConstraintValidators.checkPresent(toDelete, message);
+		todoRepository.deleteById(toDelete.get().getId());
 	}
 
 

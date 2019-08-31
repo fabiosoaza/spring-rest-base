@@ -1,4 +1,4 @@
-package com.restbase.application.controller;
+package com.restbase.application.rest.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.restbase.application.rest.controller.CachingManagementController;
 import com.restbase.model.service.CachingManagementService;
 
 import static org.mockito.Mockito.when;

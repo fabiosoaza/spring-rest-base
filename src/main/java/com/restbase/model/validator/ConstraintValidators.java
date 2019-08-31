@@ -1,5 +1,7 @@
 package com.restbase.model.validator;
 
+import java.util.Optional;
+
 public class ConstraintValidators {
 
 	private ConstraintValidators() {		
@@ -15,5 +17,9 @@ public class ConstraintValidators {
 		if(object == null){
 			throw new IllegalArgumentException(message);			
 		}
+	}
+	
+	public static <T>  void checkPresent(Optional<T> object, String message) {
+		object.orElseThrow(() -> new IllegalArgumentException(message));
 	}
 }

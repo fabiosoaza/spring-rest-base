@@ -1,6 +1,7 @@
 package com.restbase.model.repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.repository.CrudRepository;
@@ -15,5 +16,5 @@ public interface TodoRepository extends CrudRepository<Todo, Long> {
 		
 	List<Todo> findAll(); 
 	
-	Todo findOneByUuid(UUID uuid);
+	Optional<Todo> findOneByUuid(UUID uuid);
 }

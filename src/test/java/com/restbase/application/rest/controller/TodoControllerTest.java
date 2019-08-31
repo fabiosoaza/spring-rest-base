@@ -1,4 +1,4 @@
-package com.restbase.application.controller;
+package com.restbase.application.rest.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -20,6 +19,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.junit.Test;
@@ -28,33 +28,43 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.google.gson.Gson;
-import com.restbase.model.service.TestService;
+import com.restbase.application.rest.converter.TodoRequestConverter;
+import com.restbase.application.rest.converter.TodoResponseConverter;
+import com.restbase.model.domain.Todo;
+import com.restbase.model.service.TodoService;
 
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-@SpringBootTest(classes={TestController.class})
+@SpringBootTest(classes={TodoController.class})
 @EnableWebMvc
-public class TestControllerTest {
+public class TodoControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
 	
 	@MockBean
-	private TestService testService;	
+	private TodoService todoService;	
+	
+	@SpyBean
+	private TodoRequestConverter todoRequestConverter;
+	
+	@SpyBean
+	private TodoResponseConverter todoResponseConverter;
 	
 	@Test
 	public void methodGetShouldReturnNotFoundIfNothingIsFound() throws Exception {
-		List<com.restbase.model.domain.Test> tests = new ArrayList<>();
-		when(testService.list()).thenReturn(tests);		
+		List<Todo> todos = new ArrayList<>();
+		when(todoService.list()).thenReturn(todos);		
 		mockMvc.perform(
-					get("/tests/")					
+					get("/todos/")					
 					.accept(MediaType.APPLICATION_JSON)
 				
 				)
@@ -67,13 +77,13 @@ public class TestControllerTest {
 	public void methodGetShouldReturnCorrectValues() throws Exception {
 		UUID id1 = UUID.randomUUID();
 		UUID id2 = UUID.randomUUID();
-		com.restbase.model.domain.Test test1 = new com.restbase.model.domain.Test(id1);
-		com.restbase.model.domain.Test test2 = new com.restbase.model.domain.Test(id2);
-		List<com.restbase.model.domain.Test> tests = Arrays.asList(test1, test2);
+		Todo todo1 = new Todo(id1, null, null, null);
+		Todo todo2 = new Todo(id2, null, null, null);
+		List<Todo> todos = Arrays.asList(todo1, todo2);
 		
-		when(testService.list()).thenReturn(tests);		
+		when(todoService.list()).thenReturn(todos);		
 		mockMvc.perform(
-					get("/tests")					
+					get("/todos")					
 					.accept(MediaType.APPLICATION_JSON)					
 				
 				)
@@ -88,11 +98,11 @@ public class TestControllerTest {
 	@Test
 	public void methodGetShouldResultFoundIfRequestedIdExists() throws Exception {
 		UUID id = UUID.randomUUID();
-		com.restbase.model.domain.Test test1 = new com.restbase.model.domain.Test(id);
+		Todo todo1 = new Todo(id, null, null, null);
 
-		when(testService.findByUuid(eq(id))).thenReturn(test1);		
+		when(todoService.findByUuid(eq(id))).thenReturn(Optional.of(todo1));		
 		mockMvc.perform(
-					get("/tests/"+id)				
+					get("/todos/"+id)				
 					.accept(MediaType.APPLICATION_JSON)		
 				)
                 .andExpect(status().isOk())
@@ -104,7 +114,7 @@ public class TestControllerTest {
 	public void methodGetShouldResultNotFoundIfRequestedIdIsNotAValidUuid() throws Exception {
 		String id = "42";			
 		mockMvc.perform(
-					get("/tests/"+id)				
+					get("/todos/"+id)				
 					.accept(MediaType.APPLICATION_JSON)		
 				)
                 .andExpect(status().isNotFound())
@@ -118,8 +128,8 @@ public class TestControllerTest {
 	public void methodGetShouldResultNotFoundIfRequestedIdDontExist() throws Exception {
 		UUID id = UUID.randomUUID();
 
-		when(testService.findByUuid(eq(id))).thenReturn(null);
-		mockMvc.perform(get("/tests/" + id)
+		when(todoService.findByUuid(eq(id))).thenReturn(Optional.empty());
+		mockMvc.perform(get("/todos/" + id)
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotFound())
 				.andExpect(content().string(""));
@@ -128,8 +138,12 @@ public class TestControllerTest {
 	
 	@Test
 	public void methodPostShouldPersist() throws Exception {		
-		String json = jsonString(new HashMap<>());
-		mockMvc.perform(post("/tests/")
+		Map<String, Object> map = new HashMap<>();
+		map.put("title", "Create integration tests");
+		map.put("description", "Create integration tests");
+		map.put("completed", false);	
+		String json = jsonString(map);
+		mockMvc.perform(post("/todos/")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json)
 				)
@@ -139,48 +153,12 @@ public class TestControllerTest {
 
 	}
 	
-	@Test
-	public void methodUpdateShouldThrowAnExceptionIfIdIsInvalid() throws Exception {	
-				
-		String json = jsonString(new HashMap<>());
-		mockMvc.perform(put("/tests/1")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(json)
-				)
-				.andExpect(status().isNotFound()
-				);
-	}
-	
-	@Test
-	public void methodUpdateShouldThrowAnExceptionIfIdIsNotFound() throws Exception {		
-		doThrow(new IllegalArgumentException("Id not found")).when(testService).updateByUUID(any(UUID.class), any(com.restbase.model.domain.Test.class));
 		
-		String json = jsonString(new HashMap<>());
-		mockMvc.perform(put("/tests/"+UUID.randomUUID().toString())				
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(json)
-				)
-				.andExpect(status().isNotFound()
-				);
-	}
-	
-	@Test
-	public void methodUpdateShouldPersist() throws Exception {		
-		String json = jsonString(new HashMap<>());
-		mockMvc.perform(put("/tests/"+UUID.randomUUID().toString())		
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(json)
-				)
-				.andExpect(status().isOk()
-				);
-
-	}
-	
 	@Test
 	public void methodDeleteShouldThrowAnExceptionIfIdIsEmpty() throws Exception {	
 				
 		String json = jsonString(new HashMap<>());
-		mockMvc.perform(delete("/tests/")
+		mockMvc.perform(delete("/todos/")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json)
 				)
@@ -192,7 +170,7 @@ public class TestControllerTest {
 	public void methodDeleteShouldThrowAnExceptionIfIdIsInvalid() throws Exception {	
 				
 		String json = jsonString(new HashMap<>());
-		mockMvc.perform(delete("/tests/1")
+		mockMvc.perform(delete("/todos/1")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json)
 				)
@@ -202,10 +180,10 @@ public class TestControllerTest {
 	
 	@Test
 	public void methodDeleteShouldThrowAnExceptionIfIdIsNotFound() throws Exception {		
-		doThrow(new IllegalArgumentException("Id not found")).when(testService).deleteByUUID(any(UUID.class));
+		doThrow(new IllegalArgumentException("Id not found")).when(todoService).deleteByUUID(any(UUID.class));
 		
 		String json = jsonString(new HashMap<>());
-		mockMvc.perform(delete("/tests/"+UUID.randomUUID().toString())				
+		mockMvc.perform(delete("/todos/"+UUID.randomUUID().toString())				
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json)
 				)
@@ -216,7 +194,7 @@ public class TestControllerTest {
 	@Test
 	public void methodDeleteShouldPersist() throws Exception {		
 		String json = jsonString(new HashMap<>());
-		mockMvc.perform(delete("/tests/"+UUID.randomUUID().toString())		
+		mockMvc.perform(delete("/todos/"+UUID.randomUUID().toString())		
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json)
 				)
