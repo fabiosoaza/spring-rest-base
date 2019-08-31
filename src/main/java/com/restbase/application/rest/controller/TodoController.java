@@ -61,7 +61,6 @@ public class TodoController {
 	
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<TodoResponse> view(@PathVariable("id") String id){
-		logger.info("Request Viewing, id {}.", id);
 		try{
 			Optional<Todo> optional = todoService.findByUuid(getUuid(id));
 			TodoResponse response = optional.isPresent() ? todoResponseConverter.convert(optional.get()): null;		
@@ -69,6 +68,7 @@ public class TodoController {
 			return ResponseEntity.status(status).body(response);
 		}
 		catch(IllegalArgumentException ias){
+			logger.error("Error viewing item",ias);
 			return ResponseEntity.notFound().build();
 		}
 	}
@@ -98,7 +98,6 @@ public class TodoController {
 
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<String> delete(@PathVariable("id") String id){
-		logger.info("Request removing, id {}.", id);
 		try{
 			todoService.deleteByUUID(getUuid(id));			
 		}

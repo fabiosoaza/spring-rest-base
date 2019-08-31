@@ -10,9 +10,7 @@ public class TodoResponse {
 	private String description;
 	private Boolean completed;
 	
-	public TodoResponse() {
-		// Default DTO
-	}
+	public TodoResponse() {}
 	
 	public TodoResponse(UUID uuid, String title, String description, Boolean completed) {
 		super();
@@ -26,33 +24,18 @@ public class TodoResponse {
 		return uuid;
 	}
 
-	public void setUuid(UUID uuid) {
-		this.uuid = uuid;
-	}
-
 	public String getTitle() {
 		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
 	}
 
 	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
 	public Boolean isCompleted() {
 		return completed;
 	}
 
-	public void setCompleted(Boolean completed) {
-		this.completed = completed;
-	}
 	
 	@Override
 	public int hashCode() {

@@ -67,8 +67,7 @@ public class TodoServiceTest {
 	@Test
 	public void findByUUIDShouldResultARecordFromRepository() {
 		UUID uuid = UUID.randomUUID();
-		Todo todo = new Todo();
-		todo.setUuid(uuid);		
+		Todo todo = new Todo(uuid, null ,null, null);
 		Optional<Todo> expectedResult = Optional.of(todo);
 		Mockito.when(todoRepository.findOneByUuid(uuid)).thenReturn(expectedResult);
 		Optional<Todo> result = todoService.findByUuid(uuid);
@@ -97,8 +96,7 @@ public class TodoServiceTest {
 	@Test
 	public void deleteUUIDPkShouldDeleteIfIdIsFound() {
 		UUID uuid = UUID.randomUUID();
-		Todo todo = new Todo();
-		todo.setUuid(uuid);
+		Todo todo = new Todo(uuid, null, null, null);
 		todo.setId(DEFAULT_ID);
 		Mockito.when(todoRepository.findOneByUuid(Mockito.eq(uuid))).thenReturn(Optional.of(todo));
 		todoService.deleteByUUID(uuid);
