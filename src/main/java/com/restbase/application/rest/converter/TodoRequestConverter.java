@@ -13,8 +13,12 @@ public class TodoRequestConverter {
 	}
 	
 	public TodoRequest convert(Todo todo) {
-		return new TodoRequest(todo.getUuid(), todo.getTitle(), todo.getDescription(), todo.isCompleted());
+		TodoRequest todoRequest = new TodoRequest();
+		todoRequest.setUuid(todo.getUuid());
+		todoRequest.setTitle(todo.getTitle());
+		todoRequest.setDescription(todo.getDescription());
+		todoRequest.setCompleted(todo.isCompleted());
+		return todoRequest;
 	}
-
 	
 }

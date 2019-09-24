@@ -13,8 +13,12 @@ public class TodoResponseConverter {
 	}
 	
 	public TodoResponse convert(Todo todo) {
-		return new TodoResponse(todo.getUuid(), todo.getTitle(), todo.getDescription(), todo.isCompleted());
+		TodoResponse todoResponse = new TodoResponse();
+		todoResponse.setUuid(todo.getUuid());
+		todoResponse.setTitle(todo.getTitle());
+		todoResponse.setDescription(todo.getDescription());
+		todoResponse.setCompleted(todo.isCompleted());
+		return todoResponse;
 	}
-
 	
 }
