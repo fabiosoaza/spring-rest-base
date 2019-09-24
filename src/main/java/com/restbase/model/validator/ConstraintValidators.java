@@ -20,6 +20,8 @@ public class ConstraintValidators {
 	}
 	
 	public static <T>  void checkPresent(Optional<T> object, String message) {
-		object.orElseThrow(() -> new IllegalArgumentException(message));
+		if (!object.isPresent()) {
+			throw new IllegalArgumentException(message);
+		}
 	}
 }

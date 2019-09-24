@@ -53,7 +53,7 @@ public class TodoService {
 		Optional<Todo> toDelete = findByUuid(uuid);
 		String message = String.format(ID_COULD_NOT_BE_FOUND_MSG, uuid);
 		ConstraintValidators.checkPresent(toDelete, message);
-		todoRepository.deleteById(toDelete.get().getId());
+		toDelete.ifPresent(o -> todoRepository.deleteById(o.getId()));
 	}
 
 
