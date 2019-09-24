@@ -93,7 +93,7 @@ function install(){
         git fetch --prune
         set_release_version
     fi
-    mvn install -B -V  
+    mvn clean install -B -V  
 }
 
 function build_and_push_image(){
@@ -119,7 +119,7 @@ function after_success(){
     echo "Running after sucess task"
     bash <(curl -s https://codecov.io/bash)
     echo "Publishing codecoverage report"
-    mvn clean test jacoco:report org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar      
+    mvn jacoco:report org.jacoco:jacoco-maven-plugin:prepare-agent sonar:sonar      
     if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
         echo "Releasing version"
         release
