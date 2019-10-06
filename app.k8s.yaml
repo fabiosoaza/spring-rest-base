@@ -71,7 +71,17 @@ spec:
           valueFrom:
             configMapKeyRef:
               name: properties 
-              key: ssl_mode                                                                      
+              key: ssl_mode
+        - name: MANAGEMENT_USER
+          valueFrom:
+            configMapKeyRef:
+              name: properties 
+              key: management_user
+        - name: MANAGEMENT_PASS
+          valueFrom:
+            configMapKeyRef:
+              name: properties 
+              key: management_pass                                                                            
         ports:
         - containerPort: 8080
         imagePullPolicy: IfNotPresent      

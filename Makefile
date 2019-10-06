@@ -29,7 +29,7 @@ minikube-build-push-image:
 	docker build . -f Dockerfile -t fabiosoaza/spring-rest-base-app:latest
 
 k8s-create-configmaps:
-	kubectl create configmap properties --from-literal=db_host=10.0.2.2 --from-literal=db_name=test --from-literal=db_port=5432 --from-literal=db_user=test --from-literal=db_pass=test --from-literal=ssl_mode=disable
+	kubectl create configmap properties --from-literal=db_host=10.0.2.2 --from-literal=db_name=test --from-literal=db_port=5432 --from-literal=db_user=test --from-literal=db_pass=test --from-literal=ssl_mode=disable --from-literal=management_user=test --from-literal=management_pass=test
 
 k8s-create-services:	
 	kubectl create -f app.k8s.yaml	
