@@ -15,6 +15,8 @@ services:
                   - DB_USER=test
                   - DB_PASS=test
                   - SSL_MODE=disable
+                  - MANAGEMENT_USER=test
+                  - MANAGEMENT_PASS=test
 
       db:      
             image: "fabiosoaza/spring-rest-base-database" 

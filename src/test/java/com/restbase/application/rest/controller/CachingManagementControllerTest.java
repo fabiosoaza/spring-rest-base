@@ -26,7 +26,7 @@ import com.restbase.model.service.CachingManagementService;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(secure=false)
 @SpringBootTest(classes = { CachingManagementController.class })
 @EnableWebMvc
 public class CachingManagementControllerTest {
