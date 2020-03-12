@@ -64,7 +64,7 @@ public class TodoControllerTest {
 		when(todoService.list()).thenReturn(todos);
 		mockMvc.perform(get("/todos/").accept(MediaType.APPLICATION_JSON)
 
-		).andExpect(status().isNotFound()).andExpect(jsonPath("$", hasSize(0)));
+		).andExpect(status().isNoContent()).andExpect(jsonPath("$", hasSize(0)));
 
 	}
 
@@ -72,8 +72,8 @@ public class TodoControllerTest {
 	public void methodGetShouldReturnCorrectValues() throws Exception {
 		UUID id1 = UUID.randomUUID();
 		UUID id2 = UUID.randomUUID();
-		Todo todo1 = new Todo(id1, null, null, null);
-		Todo todo2 = new Todo(id2, null, null, null);
+		Todo todo1 = Todo.builder().uuid(id1).build();
+		Todo todo2 = Todo.builder().uuid(id2).build();
 		List<Todo> todos = Arrays.asList(todo1, todo2);
 
 		when(todoService.list()).thenReturn(todos);
@@ -88,7 +88,7 @@ public class TodoControllerTest {
 	@Test
 	public void methodGetShouldResultFoundIfRequestedIdExists() throws Exception {
 		UUID id = UUID.randomUUID();
-		Todo todo1 = new Todo(id, null, null, null);
+		Todo todo1 = Todo.builder().uuid(id).build();
 
 		when(todoService.findByUuid(eq(id))).thenReturn(Optional.of(todo1));
 		mockMvc.perform(get("/todos/" + id).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())

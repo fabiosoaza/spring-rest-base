@@ -1,6 +1,5 @@
 package com.restbase.model.domain;
 
-import java.util.Objects;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -14,6 +13,21 @@ import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@ToString
+@Getter
+@Setter
+@NoArgsConstructor
+@Builder
+@AllArgsConstructor
+@EqualsAndHashCode(of="uuid")
 @Entity
 @Table(name = "todos")
 public class Todo {
@@ -37,62 +51,9 @@ public class Todo {
 	@Column(name="completed", nullable = false)
 	private Boolean completed;
 
-	public Todo(UUID uuid, String title, String description, Boolean completed) {
-		super();
-		this.uuid = uuid;
-		this.title = title;
-		this.description = description;
-		this.completed = completed;
-	}	
-
-	public Todo() {
-		//Default constructor
-	}
-	
-	public Long getId() {
-		return id;
-	}
-	
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public UUID getUuid() {
-		return uuid;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
 	public Boolean isCompleted() {
-		return completed;
+		return getCompleted();
 	}
-	
-	@Override
-	public int hashCode() {
-		return Objects.hash(uuid);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		return (obj instanceof Todo) && Objects.equals(uuid, ((Todo) obj).getUuid());
-	}
-
-	@Override
-	public String toString() {
-		return "Todo [id=" + id + ", uuid=" + uuid + ", title=" + title + ", description=" + description
-				+ ", completed=" + completed + "]";
-	}
-	
 	
 	
 

@@ -8,17 +8,22 @@ import com.restbase.model.domain.Todo;
 @Component
 public class TodoRequestConverter {
 
-	public Todo convert(TodoRequest dto) {
-		return new Todo(dto.getUuid(), dto.getTitle(), dto.getDescription(), dto.isCompleted());
+	public Todo convert(TodoRequest dto) {		
+		return Todo.builder()
+				.uuid(dto.getUuid())
+				.title(dto.getTitle())
+				.description(dto.getDescription())
+				.completed(dto.isCompleted())
+				.build();
 	}
 	
 	public TodoRequest convert(Todo todo) {
-		TodoRequest todoRequest = new TodoRequest();
-		todoRequest.setUuid(todo.getUuid());
-		todoRequest.setTitle(todo.getTitle());
-		todoRequest.setDescription(todo.getDescription());
-		todoRequest.setCompleted(todo.isCompleted());
-		return todoRequest;
+		return TodoRequest.builder()
+		.uuid(todo.getUuid())
+		.title(todo.getTitle())
+		.description(todo.getDescription())
+		.completed(todo.isCompleted())
+		.build();
 	}
 	
 }
