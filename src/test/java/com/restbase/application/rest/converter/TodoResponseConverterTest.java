@@ -29,7 +29,12 @@ public class TodoResponseConverterTest {
 		
 		Todo converted = todoResponseConverter.convert(todoResponse);
 		
-		Todo expected = new Todo(uuid, title, description, completed);
+		Todo expected = Todo.builder()
+				.uuid(uuid)
+				.title(title)
+				.description(description)
+				.completed(completed)
+				.build();
 		
 		Assertions.assertThat(converted).isEqualTo(expected);
 	}
@@ -37,7 +42,14 @@ public class TodoResponseConverterTest {
 	@Test
 	public void shouldConvertDomain() {
 		
-		TodoResponse converted = todoResponseConverter.convert(new Todo(uuid, title, description, completed));
+		TodoResponse converted = todoResponseConverter.convert(
+				Todo.builder()
+				.uuid(uuid)
+				.title(title)
+				.description(description)
+				.completed(completed)
+				.build()
+				);
 		
 		TodoResponse expected = new TodoResponse();
 		expected.setUuid(uuid);

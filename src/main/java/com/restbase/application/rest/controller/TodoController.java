@@ -6,8 +6,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,12 +26,16 @@ import com.restbase.application.rest.dto.TodoResponse;
 import com.restbase.model.domain.Todo;
 import com.restbase.model.service.TodoService;
 
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@NoArgsConstructor
 @RestController
 @RequestMapping("/todos")
 public class TodoController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(TodoController.class);
-	
+
 	@Autowired
 	private TodoService todoService;
 	
@@ -43,19 +45,16 @@ public class TodoController {
 	@Autowired
 	private TodoResponseConverter todoResponseConverter;
 	
-	public TodoController() {
-		// default constructor
-	}
-		
+
 	@GetMapping	
 	public @ResponseBody ResponseEntity<List<TodoResponse>> list(){
-		logger.info("Request Listing");
+		log.info("Request Listing");
 		List<TodoResponse> response = Optional.ofNullable(todoService.list())
 				.orElse(Collections.emptyList())
 				.stream()
 				.map(todo->todoResponseConverter.convert(todo))
 				.collect(Collectors.toList());
-		HttpStatus status = !response.isEmpty() ? HttpStatus.OK: HttpStatus.NOT_FOUND;
+		HttpStatus status = !response.isEmpty() ? HttpStatus.OK: HttpStatus.NO_CONTENT;
 		return ResponseEntity.status(status).body(response);
 	}
 	
@@ -68,7 +67,7 @@ public class TodoController {
 			return ResponseEntity.status(status).body(response);
 		}
 		catch(IllegalArgumentException ias){
-			logger.error("Error viewing item",ias);
+			log.error("Error viewing item",ias);
 			return ResponseEntity.notFound().build();
 		}
 	}
@@ -79,7 +78,7 @@ public class TodoController {
 			uuid = UUID.fromString(id);
 		}
 		catch(Exception ex){
-			logger.error("Fail parsing the UUID string", ex);
+			log.error("Fail parsing the UUID string", ex);
 			throw new IllegalArgumentException("Invalid id");
 		}
 		return uuid;
@@ -88,7 +87,7 @@ public class TodoController {
 	@PostMapping
 	@PutMapping
 	public ResponseEntity<TodoResponse> save(@RequestBody TodoRequest todoDto){
-		logger.info("Request Saving");
+		log.info("Request Saving");
 		Todo todo = todoRequestConverter.convert(todoDto);
 		todoService.save(todo);
 		TodoResponse response = todoResponseConverter.convert(todo);
@@ -102,7 +101,7 @@ public class TodoController {
 			todoService.deleteByUUID(getUuid(id));			
 		}
 		catch(IllegalArgumentException ex){
-			logger.error("Error deleting id "+id+".", ex);
+			log.error("Error deleting id "+id+".", ex);
 			return ResponseEntity.notFound().build();
 		}
 		return ResponseEntity.ok().build();

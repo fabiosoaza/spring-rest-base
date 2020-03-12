@@ -28,7 +28,12 @@ public class TodoRequestConverterTest {
 		
 		Todo converted = todoRequestConverter.convert(todoRequest);
 		
-		Todo expected = new Todo(uuid, title, description, completed);
+		Todo expected = Todo.builder()
+				.uuid(uuid)
+				.title(title)
+				.description(description)
+				.completed(completed)
+				.build();
 		
 		Assertions.assertThat(converted).isEqualTo(expected);
 	}
@@ -36,13 +41,21 @@ public class TodoRequestConverterTest {
 	@Test
 	public void shouldConvertDomain() {
 		
-		TodoRequest converted = todoRequestConverter.convert(new Todo(uuid, title, description, completed));
+		TodoRequest converted = todoRequestConverter.convert(
+				Todo.builder()
+				.uuid(uuid)
+				.title(title)
+				.description(description)
+				.completed(completed)
+				.build()
+				);
 		
-		TodoRequest expected = new TodoRequest();
-		expected.setUuid(uuid);
-		expected.setTitle(title);
-		expected.setDescription(description);
-		expected.setCompleted(completed);
+		TodoRequest expected = TodoRequest.builder()
+				.uuid(uuid)
+				.title(title)
+				.description(description)
+				.completed(completed)
+				.build();
 		
 		Assertions.assertThat(converted).isEqualTo(expected);
 	}

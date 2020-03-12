@@ -9,12 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import com.restbase.model.domain.Todo;
 
-
 @Repository
-public interface TodoRepository extends CrudRepository<Todo, Long> {
-
-		
+public interface TodoRepository extends CrudRepository<Todo, Long> {		
 	List<Todo> findAll(); 
-	
 	Optional<Todo> findOneByUuid(UUID uuid);
 }

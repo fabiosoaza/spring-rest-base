@@ -8,8 +8,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.util.StopWatch;
 import org.springframework.util.StringUtils;
@@ -17,10 +15,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.restbase.application.constant.Constants;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class MDCInterceptor  extends OncePerRequestFilter {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(MDCInterceptor.class);
-
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
@@ -29,11 +28,11 @@ public class MDCInterceptor  extends OncePerRequestFilter {
 
 		if (!StringUtils.isEmpty(tracerBullet)) {
 			setTracerBullet(tracerBullet);
-			LOG.debug("Header {} value put into MDC is {}", Constants.TRACER_BULLET, tracerBullet);
+			log.debug("Header {} value put into MDC is {}", Constants.TRACER_BULLET, tracerBullet);
 		} else {
 			tracerBullet = UUID.randomUUID().toString();
 			setTracerBullet(tracerBullet);
-			LOG.debug("Header {} is empty. Generated local {} value is {}", Constants.TRACER_BULLET, Constants.TRACER_BULLET, tracerBullet);
+			log.debug("Header {} is empty. Generated local {} value is {}", Constants.TRACER_BULLET, Constants.TRACER_BULLET, tracerBullet);
 		}
 
 		StopWatch watch = new StopWatch();
@@ -42,7 +41,7 @@ public class MDCInterceptor  extends OncePerRequestFilter {
 		filterChain.doFilter(request, response);
 
 		watch.stop();
-		LOG.info("Request processed in {} ms", watch.getTotalTimeMillis());
+		log.info("Request processed in {} ms", watch.getTotalTimeMillis());
 
 		MDC.remove(Constants.TRACER_BULLET);
 

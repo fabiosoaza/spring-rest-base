@@ -9,16 +9,21 @@ import com.restbase.model.domain.Todo;
 public class TodoResponseConverter {
 
 	public Todo convert(TodoResponse dto) {
-		return new Todo(dto.getUuid(), dto.getTitle(), dto.getDescription(), dto.isCompleted());
+		return Todo.builder()
+				.uuid(dto.getUuid())
+				.title(dto.getTitle())
+				.description(dto.getDescription())
+				.completed(dto.isCompleted())
+				.build();
 	}
 	
 	public TodoResponse convert(Todo todo) {
-		TodoResponse todoResponse = new TodoResponse();
-		todoResponse.setUuid(todo.getUuid());
-		todoResponse.setTitle(todo.getTitle());
-		todoResponse.setDescription(todo.getDescription());
-		todoResponse.setCompleted(todo.isCompleted());
-		return todoResponse;
+		return TodoResponse.builder()
+				.uuid(todo.getUuid())
+				.title(todo.getTitle())
+				.description(todo.getDescription())
+				.completed(todo.isCompleted())
+				.build();
 	}
 	
 }
